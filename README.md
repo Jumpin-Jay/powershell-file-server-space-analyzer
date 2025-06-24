@@ -18,6 +18,43 @@
 | **Tags** | `powershell`, `file-server`, `space-analysis`, `deduplication`, `html-report`, `storage-optimization` |
 | **Status** | ✅ Aprovado para ambiente de produção |
 
+## 📷 Visualização do Relatório Interativo
+
+A ferramenta gera um dashboard HTML interativo moderno que facilita a visualização e análise de problemas de espaço em servidores de arquivos. O relatório inclui gráficos avançados, métricas em tempo real e uma interface responsiva para análise completa.
+
+<p align="center">
+  <strong>👇 Clique no botão abaixo para visualizar um exemplo de dashboard de análise de espaço 👇</strong>
+  <br><br>
+  <a href="https://mathewsbuzetti.github.io/powershell-file-server-space-analyzer/" target="_blank">
+    <img src="https://img.shields.io/badge/Acessar%20Demo-Dashboard:%20Análise%20de%20Espaço-brightgreen?style=for-the-badge&logo=html5" alt="Acessar Demo" width="400">
+  </a>
+  <br>
+  <em>O demo mostra todas as funcionalidades do dashboard, incluindo métricas de recuperação, gráficos interativos e recomendações priorizadas</em>
+</p>
+
+![image](https://github.com/user-attachments/assets/c86feab3-850a-4bd1-95d5-7c64717da385)
+
+![image](https://github.com/user-attachments/assets/913fc712-665b-4780-a0d4-a389958fcdcd)
+
+![image](https://github.com/user-attachments/assets/52363165-ea22-43f2-9a65-5167f21aa8e0)
+
+## 📋 Índice
+
+1. [Metadados](#-metadados)
+2. [Visualização do Relatório Interativo](#-visualização-do-relatório-interativo)
+3. [Garantia de Segurança](#-garantia-de-segurança)
+4. [Funcionalidades](#-funcionalidades)
+5. [Pré-requisitos](#-pré-requisitos)
+6. [Como Usar](#-como-usar)
+7. [Resultados e Relatórios](#-resultados-e-relatórios)
+8. [Configurações Avançadas](#-configurações-avançadas)
+9. [Windows Deduplication](#-windows-deduplication)
+10. [Interpretando os Resultados](#-interpretando-os-resultados)
+11. [Segurança e Boas Práticas](#-segurança-e-boas-práticas)
+12. [Limitações e Considerações](#-limitações-e-considerações)
+13. [Versionamento](#-versionamento)
+14. [Suporte e Contato](#-suporte-e-contato)
+
 ## 🔒 Garantia de Segurança
 
 > ### ⚠️ **SCRIPT 100% READ-ONLY - MÁXIMA SEGURANÇA**
@@ -60,48 +97,64 @@
 * Espaço livre em C:\temp (ou pasta configurada) para relatórios
 * Navegador moderno para visualizar o dashboard HTML (Chrome, Edge, Firefox)
 
-## 🚀 Como Usar
+> [!WARNING]\
+> **Requisitos de segurança e performance:**
+> - Execute como administrador para máxima cobertura de análise
+> - Tenha pelo menos 2GB de RAM livre para análise de servidores grandes
+> - Reserve 500MB de espaço livre para geração de relatórios
+> - Considere executar fora do horário comercial em servidores em produção
+> - O script é 100% read-only, mas pode impactar temporariamente a performance do servidor
 
-### Método 1: Execução Interativa (Recomendado)
+> [!NOTE]\
+> **Compatibilidade testada:**
+> - Windows Server 2016/2019/2022 (Recomendado)
+> - Windows 10/11 Pro/Enterprise
+> - PowerShell 5.1, 7.x
+> - Compartilhamentos SMB/CIFS
+> - Volumes NTFS locais e de rede
+
+## 🚀 Como Usar
 
 1. **Download do Script**:
    
    [![Download Script](https://img.shields.io/badge/Download%20Script-FileServerSpaceAnalyzer.ps1-blue?style=flat-square&logo=powershell)](https://github.com/mathewsbuzetti/powershell-file-server-space-analyzer/blob/main/Script/FileServerSpaceAnalyzer.ps1)
 
-2. **Execução**:
+2. **Abra o script no PowerShell ISE**.
+
+3. **Localize as linhas abaixo no início do script e altere conforme necessário**:
+
    ```powershell
-   # Abra o PowerShell como Administrador
-   Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-   .\FileServerSpaceAnalyzer.ps1
+   # Configurações principais (edite no início do script)
+   $TamanhoMinimoArquivosMB = 500          # Tamanho mínimo para "grandes"
+   $DiasArquivosAntigos = 90               # Idade mínima para "antigos"
+   $TopArquivosGrandesAntigos = 1000       # Quantidade máxima a analisar
+   $TamanhoMinimoArquivosDuplicadosMB = 50 # Tamanho mínimo para duplicados
+   $TopGruposDuplicados = 2000             # Top grupos de duplicados
+   $ModoSilencioso = $true                 # Reduz verbosidade
    ```
 
-3. **Configuração Interativa**:
+> [!WARNING]\
+> **Configurações avançadas e seus impactos:**
+> - **TamanhoMinimoArquivosMB**: Define o tamanho mínimo para considerar arquivos como "grandes". Valores menores (100MB) incluem mais arquivos na análise, mas aumentam significativamente o tempo de execução em servidores com muitos arquivos.
+> - **DiasArquivosAntigos**: Define quantos dias para considerar arquivos como "antigos". Valores menores (30 dias) incluem mais arquivos recentes, enquanto valores maiores (180 dias) focam apenas em arquivos realmente antigos.
+> - **TopArquivosGrandesAntigos**: Limita quantos arquivos grandes/antigos serão analisados. Valores maiores (5000) fornecem análise mais completa, mas consomem mais memória e tempo de processamento.
+> - **TamanhoMinimoArquivosDuplicadosMB**: Define o tamanho mínimo para buscar duplicados. Valores menores (10MB) encontram mais duplicados, mas o cálculo de hash MD5 demora muito mais tempo.
+> - **TopGruposDuplicados**: Limita quantos grupos de duplicados serão processados. Aumentar (5000+) pode melhorar a detecção, mas aumenta significativamente o uso de memória e tempo de processamento.
+> - **ModoSilencioso**: Quando false, exibe logs detalhados no console. Útil para debug, mas pode gerar muito output em análises grandes.
+
+> [!NOTE]\
+> **Recomendações de configuração por tamanho do servidor:**
+> - **Pequeno (<1TB)**: Use valores padrão
+> - **Médio (1-10TB)**: TamanhoMinimoArquivosMB = 200, TopArquivosGrandesAntigos = 2000
+> - **Grande (10-50TB)**: TamanhoMinimoArquivosMB = 500, TopArquivosGrandesAntigos = 5000, TamanhoMinimoArquivosDuplicadosMB = 100
+> - **Muito Grande (>50TB)**: TamanhoMinimoArquivosMB = 1000, TopArquivosGrandesAntigos = 3000, TamanhoMinimoArquivosDuplicadosMB = 200
+
+4. **Após a alteração, execute o script pressionando F5 ou o botão Play no PowerShell ISE**.
+
+5. **Configuração Interativa**:
    - Escolha entre análise local ou de rede
    - Digite o caminho a ser analisado
-   - Configure tamanhos mínimos e idade dos arquivos
    - Aguarde a análise ser concluída
-
-### Método 2: Parâmetros Diretos
-
-```powershell
-# Análise de servidor local
-.\FileServerSpaceAnalyzer.ps1 -TamanhoMinimoMB 1000 -DiasAntigos 180
-
-# Análise detalhada com logs verbosos
-.\FileServerSpaceAnalyzer.ps1 -ModoDetalhado
-```
-
-### 🎛️ Parâmetros Configuráveis
-
-```powershell
-# Configurações principais (edite no início do script)
-$TamanhoMinimoArquivosMB = 500          # Tamanho mínimo para "grandes"
-$DiasArquivosAntigos = 90               # Idade mínima para "antigos"
-$TopArquivosGrandesAntigos = 1000       # Quantidade máxima a analisar
-$TamanhoMinimoArquivosDuplicadosMB = 50 # Tamanho mínimo para duplicados
-$TopGruposDuplicados = 2000             # Top grupos de duplicados
-$ModoSilencioso = $true                 # Reduz verbosidade
-```
 
 ## 📊 Resultados e Relatórios
 
@@ -184,6 +237,14 @@ O script detecta automaticamente se a Windows Deduplication está ativa e ajusta
 
 ## 🛡️ Segurança e Boas Práticas
 
+> [!WARNING]\
+> **Importantes considerações de segurança:**
+> - Embora o script seja 100% read-only, a análise intensiva pode impactar a performance do servidor
+> - Execute em horários de baixo uso para minimizar impacto nos usuários
+> - Verifique se há espaço suficiente para os relatórios antes da execução
+> - Não execute em múltiplos servidores simultaneamente sem considerar a carga de rede
+> - Mantenha os relatórios gerados em local seguro pois contêm informações sensíveis sobre a estrutura de arquivos
+
 ### Antes da Execução
 1. ✅ Execute em horário de baixo uso do servidor
 2. ✅ Tenha backup atualizado dos dados críticos
@@ -201,7 +262,18 @@ O script detecta automaticamente se a Windows Deduplication está ativa e ajusta
 3. 📁 Confirmar que arquivos "antigos" podem ser arquivados
 4. 💾 Considerar backup antes de limpeza massiva
 
+> [!NOTE]\
+> **Dica de segurança:** O relatório HTML contém informações detalhadas sobre a estrutura de arquivos do servidor. Mantenha esses relatórios em local seguro e limite o acesso apenas a administradores autorizados.
+
 ## 🚨 Limitações e Considerações
+
+> [!WARNING]\
+> **Limitações importantes do script:**
+> - Análises de servidores muito grandes (>50TB) podem levar mais de 12 horas
+> - O cálculo de hash MD5 para duplicados é CPU-intensivo e pode aquecer o servidor
+> - Arquivos em uso exclusivo podem não ser detectados corretamente
+> - Permissões insuficientes podem resultar em análise incompleta
+> - Não recomendado executar durante backup ou outras operações intensivas de I/O
 
 ### Performance
 - Análise de servidores grandes (>30TB) pode levar várias horas
@@ -217,6 +289,13 @@ O script detecta automaticamente se a Windows Deduplication está ativa e ajusta
 - Testado no Windows Server 2016/2019/2022
 - Requer PowerShell 5.1+ para funcionalidades completas
 - Alguns recursos podem variar entre versões do Windows
+
+> [!NOTE]\
+> **Estimativa de tempo de execução:**
+> - Servidor pequeno (<1TB): 15-30 minutos
+> - Servidor médio (1-10TB): 1-3 horas
+> - Servidor grande (10-50TB): 3-8 horas
+> - Servidor muito grande (>50TB): 8+ horas
 
 ## 🔄 Versionamento
 
