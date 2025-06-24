@@ -159,6 +159,8 @@ A ferramenta gera um dashboard HTML interativo moderno que facilita a visualiza�
    - Digite o caminho a ser analisado
    - Aguarde a análise ser concluída
 
+![image](https://github.com/user-attachments/assets/6d898b82-6c1d-4a41-a177-a2fb310b43c4)
+
 ## 📊 Resultados e Relatórios
 
 ### Dashboard HTML Interativo
