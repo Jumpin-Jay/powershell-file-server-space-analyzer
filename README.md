@@ -142,13 +142,6 @@ A ferramenta gera um dashboard HTML interativo moderno que facilita a visualiza�
 > - **TopGruposDuplicados**: Limita quantos grupos de duplicados serão processados. Aumentar (5000+) pode melhorar a detecção, mas aumenta significativamente o uso de memória e tempo de processamento.
 > - **ModoSilencioso**: Quando false, exibe logs detalhados no console. Útil para debug, mas pode gerar muito output em análises grandes.
 
-> [!NOTE]\
-> **Recomendações de configuração por tamanho do servidor:**
-> - **Pequeno (1TB)**: Use valores padrão
-> - **Médio (1-10TB)**: TamanhoMinimoArquivosMB = 200, TopArquivosGrandesAntigos = 2000
-> - **Grande (10-50TB)**: TamanhoMinimoArquivosMB = 500, TopArquivosGrandesAntigos = 5000, TamanhoMinimoArquivosDuplicadosMB = 100
-> - **Muito Grande (50TB)**: TamanhoMinimoArquivosMB = 1000, TopArquivosGrandesAntigos = 3000, TamanhoMinimoArquivosDuplicadosMB = 200
-
 4. **Após a alteração, execute o script pressionando F5 ou o botão Play no PowerShell ISE**.
 
 5. **Configuração Interativa**:
