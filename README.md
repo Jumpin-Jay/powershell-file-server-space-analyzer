@@ -119,7 +119,6 @@ A ferramenta gera um dashboard HTML interativo moderno que facilita a visualizaÃ
 > [!NOTE]\
 > **Compatibilidade testada:**
 > - Windows Server 2016/2019/2022 (Recomendado)
-> - Windows 10/11 Pro/Enterprise
 > - PowerShell 5.1, 7.x
 > - Compartilhamentos SMB/CIFS
 > - Volumes NTFS locais e de rede
