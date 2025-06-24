@@ -32,11 +32,22 @@ A ferramenta gera um dashboard HTML interativo moderno que facilita a visualiza�
   <em>O demo mostra todas as funcionalidades do dashboard, incluindo métricas de recuperação, gráficos interativos e recomendações priorizadas</em>
 </p>
 
-![image](https://github.com/user-attachments/assets/c86feab3-850a-4bd1-95d5-7c64717da385)
+![image](https://github.com/user-attachments/assets/cdc429e3-8e11-41db-bb7d-4755bc1b8061)
 
-![image](https://github.com/user-attachments/assets/913fc712-665b-4780-a0d4-a389958fcdcd)
+![image](https://github.com/user-attachments/assets/444f5aa0-097d-40fd-9722-08f84b268677)
 
-![image](https://github.com/user-attachments/assets/52363165-ea22-43f2-9a65-5167f21aa8e0)
+![image](https://github.com/user-attachments/assets/fe43d60e-34df-4b33-b3f7-c8fee4d5aecd)
+
+![image](https://github.com/user-attachments/assets/683bec98-4712-4411-bda3-14c2172c04b1)
+
+![image](https://github.com/user-attachments/assets/e9857c3b-cbf1-487c-b7b7-2e117000c8a7)
+
+![image](https://github.com/user-attachments/assets/a2b21ced-0270-4081-a2ce-62b969895b5b)
+
+![image](https://github.com/user-attachments/assets/54bea6b8-8dc8-4e90-a85d-64287f0a9be0)
+
+![image](https://github.com/user-attachments/assets/d5ca92e5-cf02-42e4-9694-e31f60c95f00)
+
 
 ## 📋 Índice
 
