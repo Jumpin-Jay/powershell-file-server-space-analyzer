@@ -144,10 +144,10 @@ A ferramenta gera um dashboard HTML interativo moderno que facilita a visualiza�
 
 > [!NOTE]\
 > **Recomendações de configuração por tamanho do servidor:**
-> - **Pequeno (<1TB)**: Use valores padrão
+> - **Pequeno (1TB)**: Use valores padrão
 > - **Médio (1-10TB)**: TamanhoMinimoArquivosMB = 200, TopArquivosGrandesAntigos = 2000
 > - **Grande (10-50TB)**: TamanhoMinimoArquivosMB = 500, TopArquivosGrandesAntigos = 5000, TamanhoMinimoArquivosDuplicadosMB = 100
-> - **Muito Grande (>50TB)**: TamanhoMinimoArquivosMB = 1000, TopArquivosGrandesAntigos = 3000, TamanhoMinimoArquivosDuplicadosMB = 200
+> - **Muito Grande (50TB)**: TamanhoMinimoArquivosMB = 1000, TopArquivosGrandesAntigos = 3000, TamanhoMinimoArquivosDuplicadosMB = 200
 
 4. **Após a alteração, execute o script pressionando F5 ou o botão Play no PowerShell ISE**.
 
@@ -190,7 +190,7 @@ C:\temp\AnaliseFileServer_YYYY-MM-DD_HHMMSS\
 
 ### Performance e Otimização
 ```powershell
-# Para servidores grandes (>10TB)
+# Para servidores grandes (10TB)
 $MaxErrosPorTipo = 100                  # Aumentar limite de erros
 $TopGruposDuplicados = 5000             # Mais grupos de duplicados
 
@@ -245,12 +245,6 @@ O script detecta automaticamente se a Windows Deduplication está ativa e ajusta
 > - Não execute em múltiplos servidores simultaneamente sem considerar a carga de rede
 > - Mantenha os relatórios gerados em local seguro pois contêm informações sensíveis sobre a estrutura de arquivos
 
-### Antes da Execução
-1. ✅ Execute em horário de baixo uso do servidor
-2. ✅ Tenha backup atualizado dos dados críticos
-3. ✅ Teste em ambiente de desenvolvimento primeiro
-4. ✅ Verifique espaço livre para relatórios
-
 ### Durante a Análise
 - O script é 100% read-only - não modifica arquivos
 - Performance pode ser impactada temporariamente
@@ -276,7 +270,7 @@ O script detecta automaticamente se a Windows Deduplication está ativa e ajusta
 > - Não recomendado executar durante backup ou outras operações intensivas de I/O
 
 ### Performance
-- Análise de servidores grandes (>30TB) pode levar várias horas
+- Análise de servidores grandes (30TB) pode levar várias horas
 - Uso intensivo de CPU durante cálculo de hashes MD5
 - Impacto temporário na performance de rede/disco
 
@@ -290,13 +284,6 @@ O script detecta automaticamente se a Windows Deduplication está ativa e ajusta
 - Requer PowerShell 5.1+ para funcionalidades completas
 - Alguns recursos podem variar entre versões do Windows
 
-> [!NOTE]\
-> **Estimativa de tempo de execução:**
-> - Servidor pequeno (<1TB): 15-30 minutos
-> - Servidor médio (1-10TB): 1-3 horas
-> - Servidor grande (10-50TB): 3-8 horas
-> - Servidor muito grande (>50TB): 8+ horas
-
 ## 🔄 Versionamento
 
 ### Versão 2.3 (Atual)
@@ -307,12 +294,6 @@ O script detecta automaticamente se a Windows Deduplication está ativa e ajusta
 - ✅ Tratamento robusto de erros v2.3
 - ✅ Cálculos matemáticos corrigidos sem arredondamento duplo
 - ✅ Sistema de badges visuais para classificação de prioridade
-
-### Roadmap Futuro
-- 🔜 Suporte a múltiplos servidores em paralelo
-- 🔜 Integração com APIs de monitoramento
-- 🔜 Relatórios programados e automatizados
-- 🔜 Dashboard web em tempo real
 
 ---
 
