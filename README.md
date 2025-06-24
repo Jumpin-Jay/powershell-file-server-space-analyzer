@@ -267,7 +267,6 @@ O script detecta automaticamente se a Windows Deduplication está ativa e ajusta
 
 > [!WARNING]\
 > **Limitações importantes do script:**
-> - Análises de servidores muito grandes (>50TB) podem levar mais de 12 horas
 > - O cálculo de hash MD5 para duplicados é CPU-intensivo e pode aquecer o servidor
 > - Arquivos em uso exclusivo podem não ser detectados corretamente
 > - Permissões insuficientes podem resultar em análise incompleta
