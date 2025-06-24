@@ -206,7 +206,7 @@ $TopArquivosGrandesAntigos = 500        # Reduzir quantidade analisada
 ### Tratamento de Erros
 O script v2.3 inclui tratamento robusto para:
 - ❌ Erros de permissão de acesso
-- 📏 Caminhos muito longos (>240 caracteres)
+- 📏 Caminhos muito longos (240 caracteres)
 - 🔒 Arquivos e pastas protegidos pelo sistema
 - 🌐 Problemas de conectividade de rede
 - 💾 Limitações de memória em análises grandes
