@@ -1,5 +1,5 @@
 # Analisador de Espaço em Servidor de Arquivos
-# Versão: 2.3 - Otimizada com melhor detecção de deduplicação e limpeza simplificada
+# Versão: 2.3 - Otimizada com melhor detecção de deduplicação
 # Desenvolvido por: Mathews Buzetti
 #
 # 🛡️ SEGURANÇA: Este script é 100% READ-ONLY
