@@ -1,0 +1,1593 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório de Sanitização v2.3 (Read-Only) - \\SRV-FILES01\Dados</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --duplicados-color: #D7263D;
+            --grandes-antigos-color: #FFA500;
+            --critical: #c0392b; --critical-dark: #b03a2e; --critical-light: #e74c3c;
+            --urgent: #d35400; --urgent-dark: #a04000; --warning: #f1c40f; --warning-dark: #f39c12;
+            --caution: #e67e22; --neutral: #95a5a6; --neutral-dark: #7f8c8d;
+            --primary: #0066cc; --primary-light: #4895ef; --primary-dark: #003d7a;
+            --alert-red: #e74c3c; --alert-orange: #f39c12; --alert-yellow: #f1c40f; --alert-amber: #e67e22;
+            --success: #2ecc71; --warning: #f39c12; --danger: #e74c3c; --info: #3498db;
+            --white: #ffffff; --light-100: #f8f9fa; --light-200: #e9ecef; --light-300: #dee2e6;
+            --gray-100: #ced4da; --gray-200: #adb5bd; --gray-300: #6c757d; --gray-400: #495057;
+            --dark-100: #343a40; --dark-200: #212529;
+            --shadow-sm: 0 2px 5px rgba(0,0,0,0.05); --shadow-md: 0 4px 16px rgba(0,0,0,0.08); --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+            --space-xs: 0.25rem; --space-sm: 0.5rem; --space-md: 1rem; --space-lg: 1.5rem; --space-xl: 2rem; --space-xxl: 3rem;
+            --radius-sm: 4px; --radius-md: 8px; --radius-lg: 16px; --radius-xl: 24px; --radius-full: 9999px;
+            --transition-fast: 0.15s ease; --transition-normal: 0.3s ease; --transition-slow: 0.5s ease;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; }
+        
+        html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+        
+        body { background-color: var(--light-100); color: var(--dark-200); line-height: 1.6; overflow-x: hidden; }
+        
+        h1, h2, h3, h4, h5, h6 { font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 600; letter-spacing: -0.02em; color: var(--dark-200); }
+        
+        .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 var(--space-lg); }
+        
+        .navbar { position: sticky; top: 0; z-index: 1000; background-color: var(--white); box-shadow: var(--shadow-md); padding: var(--space-md) 0; transition: all var(--transition-normal); }
+        
+        .navbar .container { display: flex; justify-content: space-between; align-items: center; }
+        
+        .navbar-brand { font-size: 1.35rem; font-weight: 700; color: var(--primary); text-decoration: none; display: flex; align-items: center; gap: var(--space-sm); }
+        
+        .navbar-brand i { font-size: 1.4rem; }
+        
+        .navbar-links { display: flex; gap: var(--space-xl); }
+        
+        .navbar-links a { color: var(--gray-400); text-decoration: none; font-weight: 500; font-size: 0.95rem; transition: color var(--transition-fast); position: relative; }
+        
+        .navbar-links a:after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px; background-color: var(--primary); transition: width var(--transition-normal); }
+        
+        .navbar-links a:hover { color: var(--primary); }
+        
+        .navbar-links a:hover:after { width: 100%; }
+        
+        .hero { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: var(--white); padding: var(--space-xxl) 0; margin-bottom: var(--space-xxl); }
+        
+        .hero h1 { font-size: 2.5rem; margin-bottom: var(--space-md); color: var(--white); line-height: 1.3; }
+        
+        .hero p { font-size: 1.1rem; opacity: 0.9; max-width: 700px; margin-bottom: var(--space-lg); }
+        
+        .hero-stats { background-color: rgba(255, 255, 255, 0.1); border-radius: var(--radius-lg); backdrop-filter: blur(10px); padding: var(--space-lg); display: flex; gap: var(--space-xl); margin-top: var(--space-xl); flex-wrap: wrap; }
+        
+        .hero-stat { flex: 1; min-width: 200px; }
+        
+        .hero-stat-value { font-size: 2rem; font-weight: 700; margin-bottom: var(--space-xs); }
+        
+        .hero-stat-label { font-size: 0.9rem; opacity: 0.8; }
+        
+        .hero-stat.highlight-value .hero-stat-value { color: #2ecc71; }
+        
+        .hero-stat.highlight-value .hero-stat-label { color: #2ecc71; }
+        
+        .trend-indicator { display: inline-flex; align-items: center; margin-left: 8px; font-size: 0.85em; font-weight: bold; }
+        
+        .trend-up { color: var(--success); }
+        
+        .trend-down { color: var(--danger); }
+        
+        .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-lg); margin-bottom: var(--space-xxl); }
+        
+        .card { background: var(--white); border-radius: var(--radius-lg); box-shadow: var(--shadow-md); padding: var(--space-xl); transition: all var(--transition-normal); border: 1px solid var(--light-300); position: relative; overflow: hidden; }
+        
+        .card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
+        
+        .card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: linear-gradient(to bottom, var(--primary), var(--primary-dark)); }
+        
+        .card.error-card::before { background: linear-gradient(to bottom, var(--warning), var(--danger)); }
+        
+        .card.dedup-card::before { background: linear-gradient(to bottom, var(--info), var(--primary-light)); }
+        
+        .card.dedup-card.disabled::before { background: linear-gradient(to bottom, var(--danger), var(--critical)); }
+        
+        .card:nth-child(3)::before { background: linear-gradient(to bottom, var(--critical), var(--critical-dark)); }
+        
+        .card h3 { font-size: 1.15rem; margin-bottom: var(--space-lg); color: var(--dark-200); position: relative; padding-bottom: var(--space-sm); }
+        
+        .card h3::after { content: ''; position: absolute; bottom: 0; left: 0; width: 50px; height: 3px; background: linear-gradient(to right, var(--primary), var(--primary-dark)); border-radius: var(--radius-full); }
+        
+        .card-data { font-size: 1.8rem; font-weight: 700; margin-bottom: var(--space-xs); color: var(--primary-dark); display: flex; align-items: center; gap: var(--space-sm); }
+        
+        .card:nth-child(3) .card-data::after { content: "⚠️"; font-size: 1.2rem; margin-left: 5px; }
+        
+        .card-data i { font-size: 1.35rem; color: var(--primary); background-color: var(--light-100); padding: var(--space-sm); border-radius: var(--radius-md); }
+        
+        .card:nth-child(3) .card-data i { color: var(--white); background-color: var(--critical); }
+        
+        .error-card .card-data i { color: var(--white); background-color: var(--warning); }
+        
+        .dedup-card .card-data i { color: var(--white); background-color: var(--info); }
+        
+        .dedup-card.disabled .card-data i { color: var(--white); background-color: var(--danger); }
+        
+        .card-subtext { font-size: 0.95rem; color: var(--gray-300); }
+        
+        .error-details, .dedup-details { margin-top: 10px; font-size: 0.85rem; }
+        
+        .error-details span, .dedup-details span { display: block; margin: 2px 0; color: var(--gray-400); }
+        
+        .section { background: var(--white); border-radius: var(--radius-lg); box-shadow: var(--shadow-md); padding: var(--space-xl); margin-bottom: var(--space-xxl); border: 1px solid var(--light-300); }
+        
+        .section-header { margin-bottom: var(--space-xl); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-md); }
+        
+        .section h2 { font-size: 1.5rem; color: var(--dark-200); display: flex; align-items: center; gap: var(--space-sm); }
+        
+        .section h2 i { font-size: 1.25rem; color: var(--primary); background-color: var(--light-100); padding: var(--space-sm); border-radius: var(--radius-md); }
+        
+        .progress-container { margin-bottom: var(--space-lg); }
+        
+        .progress-label { display: flex; justify-content: space-between; margin-bottom: var(--space-xs); }
+        
+        .progress-label span { font-size: 0.9rem; color: var(--gray-400); font-weight: 500; }
+        
+        .progress-label strong { font-size: 0.9rem; color: var(--dark-100); }
+        
+        .progress-bar { height: 10px; background-color: var(--light-200); border-radius: var(--radius-full); overflow: hidden; position: relative; }
+        
+        .progress-fill { height: 100%; border-radius: var(--radius-full); transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); position: relative; }
+        
+        .full-disk-fill { background: linear-gradient(to right, var(--caution), var(--critical)); }
+        .temp-fill { background: linear-gradient(to right, var(--info), var(--primary)); }
+        .dup-fill { background: linear-gradient(to right, var(--warning-dark), var(--warning)); }
+        .grandes-antigos-fill { background: linear-gradient(to right, var(--urgent-dark), var(--urgent)); }
+        .total-fill { background: linear-gradient(to right, var(--success), var(--primary-light)); }
+        
+        .tabs { display: flex; margin-bottom: var(--space-lg); overflow-x: auto; overflow-y: visible; scrollbar-width: thin; scrollbar-color: var(--gray-200) var(--light-100); gap: var(--space-xs); position: relative; padding: var(--space-sm) var(--space-xs) var(--space-lg) var(--space-xs); }
+        
+        .tabs::-webkit-scrollbar { height: 4px; }
+        .tabs::-webkit-scrollbar-track { background: var(--light-100); border-radius: var(--radius-full); }
+        .tabs::-webkit-scrollbar-thumb { background-color: var(--gray-200); border-radius: var(--radius-full); }
+        
+        .tab { padding: var(--space-md) var(--space-lg); cursor: pointer; background: var(--light-100); border: none; border-radius: var(--radius-md); font-weight: 500; color: var(--gray-300); transition: all var(--transition-normal); white-space: nowrap; outline: none; margin: 2px; }
+        
+        .tab:hover { color: var(--primary); background: var(--light-200); box-shadow: 0 1px 4px rgba(0, 102, 204, 0.2); transform: translateY(-0.5px); }
+        
+        .tab.active { color: var(--white); background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); box-shadow: 0 2px 8px rgba(0, 102, 204, 0.4), 0 0 0 1px rgba(0, 102, 204, 0.2); border-radius: var(--radius-md); position: relative; z-index: 10; transform: translateY(-1px); }
+        
+        .tab-content { display: none; animation: fadeIn 0.5s ease forwards; }
+        
+        .tab-content.active { display: block; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        table { width: 100%; border-collapse: collapse; margin-bottom: var(--space-xl); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-sm); }
+        
+        table th, table td { padding: var(--space-md) var(--space-lg); text-align: left; vertical-align: middle; }
+        
+        table th:nth-child(2), table td:nth-child(2) { 
+            min-width: 110px; 
+            width: 110px; 
+            vertical-align: top;
+            padding: var(--space-lg) var(--space-md);
+        }
+        
+        table th { background-color: var(--primary-dark); color: var(--white); font-weight: 600; position: sticky; top: 0; z-index: 10; }
+        
+        table tr { border-bottom: 1px solid var(--light-300); transition: background-color var(--transition-fast); min-height: 60px; }
+        
+        table tr:nth-child(even) { background-color: rgba(0, 102, 204, 0.05); }
+        
+        table tr:nth-child(odd) { background-color: var(--white); }
+        
+        table tr:hover { background-color: var(--light-200); }
+        
+        table tr.highlight-row { background-color: rgba(46, 204, 113, 0.1); }
+        
+        table tr.highlight-row:hover { background-color: rgba(46, 204, 113, 0.2); }
+        
+        .chart-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); gap: var(--space-lg); margin: var(--space-xl) 0; }
+        
+        .chart { background: var(--white); border-radius: var(--radius-lg); padding: var(--space-xl); box-shadow: var(--shadow-md); border: 1px solid var(--light-300); height: 100%; min-height: 450px; }
+        
+        .chart h3 { font-size: 1.1rem; margin-bottom: var(--space-lg); color: var(--dark-200); text-align: center; position: relative; padding-bottom: var(--space-sm); }
+        
+        .chart h3::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 50px; height: 3px; background: linear-gradient(to right, var(--primary), var(--primary-dark)); border-radius: var(--radius-full); }
+        
+        .bar-chart { height: 300px; display: flex; align-items: flex-end; justify-content: space-around; gap: var(--space-md); padding-top: var(--space-xl); padding-bottom: var(--space-xl); }
+        
+        .bar { width: 80px; min-width: 80px; position: relative; border-radius: var(--radius-sm) var(--radius-sm) 0 0; transition: height 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); opacity: 0; animation: fadeInBar 0.5s ease forwards; animation-delay: calc(var(--index) * 0.1s); }
+        
+        .bar.bar-type-1 { background: linear-gradient(to top, var(--critical-dark), var(--critical)); position: relative; }
+        .bar.bar-type-2 { background: linear-gradient(to top, var(--urgent-dark), var(--urgent)); }
+        .bar.bar-type-3 { background: linear-gradient(to top, var(--warning-dark), var(--warning)); }
+        .bar.bar-type-4 { background: linear-gradient(to top, var(--caution), var(--warning-dark)); }
+        .bar.bar-type-5 { background: linear-gradient(to top, var(--neutral-dark), var(--neutral)); }
+        
+        @keyframes fadeInBar { to { opacity: 1; } }
+        
+        .bar:hover { box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3); filter: brightness(1.1); }
+        
+        .bar-label { position: absolute; bottom: -30px; left: 0; right: 0; text-align: center; font-size: 0.85rem; color: var(--gray-400); font-weight: 500; }
+        
+        .bar-value { position: absolute; top: -25px; left: 0; right: 0; text-align: center; font-size: 0.85rem; font-weight: 600; color: var(--dark-100); }
+        
+        .donut-chart-container { position: relative; height: 300px; display: flex; justify-content: center; align-items: center; }
+        
+        .donut-chart { position: relative; width: 200px; height: 200px; border-radius: 50%; background: conic-gradient(#D7263D 0deg 115.2deg, #FFA500 115.2deg 244.8deg, #2ecc71 244.8deg 360deg); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1); border: 2px solid #ffffff; }
+        
+        .donut-hole { position: absolute; width: 130px; height: 130px; top: 35px; left: 35px; background-color: var(--white); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-direction: column; box-shadow: inset 0 4px 8px rgba(0,0,0,0.1); }
+        
+        .donut-hole span:first-child { font-size: 1.5rem; font-weight: 700; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: var(--space-xs); }
+        
+        .donut-hole span:last-child { font-size: 0.75rem; color: var(--gray-300); }
+        
+        .legend { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-md); margin-top: var(--space-lg); width: 100%; }
+        
+        .legend-item { display: flex; align-items: center; font-size: 0.8rem; font-weight: 500; color: var(--dark-100); margin-bottom: 8px; white-space: nowrap; flex-shrink: 0; max-width: 250px; overflow: hidden; text-overflow: ellipsis; }
+        
+        .legend-main { display: flex; justify-content: center; gap: var(--space-lg); width: 100%; flex-wrap: wrap; min-width: 600px; }
+        
+        .legend-note { width: 100%; text-align: center; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--light-300); color: var(--gray-400); font-size: 0.9rem; }
+        
+        .legend-note i { margin-right: 5px; color: var(--gray-300); }
+        
+        .legend-item .legend-color { width: 12px; height: 12px; border-radius: var(--radius-sm); margin-right: var(--space-xs); }
+        
+        .legend-item:nth-child(1) .legend-color { background-color: #D7263D; }
+        .legend-item:nth-child(2) .legend-color { background-color: #FFA500; }
+        .legend-item:nth-child(3) .legend-color { background-color: #2ecc71; }
+        
+        .legend-item:nth-child(3) {
+            background: rgba(46, 204, 113, 0.05);
+            padding: 8px;
+            border-radius: var(--radius-sm);
+            border-left: 3px solid #2ecc71;
+            margin-top: 5px;
+            animation: dedupGlow 3s ease-in-out infinite;
+        }
+        
+        @keyframes dedupGlow {
+            0%, 100% { 
+                background: rgba(46, 204, 113, 0.05);
+                border-left-color: #2ecc71; 
+            }
+            50% { 
+                background: rgba(46, 204, 113, 0.15);
+                border-left-color: #27ae60; 
+            }
+        }
+        
+        .chart.dedup-active h3 {
+            background: linear-gradient(135deg, var(--success) 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .collapsible-card { background-color: var(--white); border-radius: var(--radius-lg); margin-bottom: var(--space-md); box-shadow: var(--shadow-sm); border: 1px solid var(--light-300); overflow: hidden; transition: all var(--transition-normal); }
+        
+        .collapsible-card:first-of-type { border-left: 4px solid var(--critical); }
+        
+        .collapsible-card:hover { box-shadow: var(--shadow-md); }
+        
+        .collapsible { width: 100%; padding: var(--space-lg); display: flex; justify-content: space-between; align-items: center; background-color: var(--white); cursor: pointer; border: none; text-align: left; font-size: 1.05rem; font-weight: 600; color: var(--dark-100); transition: all var(--transition-fast); }
+        
+        .collapsible:hover { background-color: var(--light-100); }
+        
+        .collapsible i { font-size: 1rem; transition: transform var(--transition-normal); }
+        
+        .collapsible.active i { transform: rotate(180deg); }
+        
+        .content { max-height: 0; overflow: hidden; transition: max-height var(--transition-normal); padding: 0 var(--space-lg); }
+        
+        .content-inner { padding: var(--space-md) 0 var(--space-lg); border-top: 1px solid var(--light-300); }
+        
+        .chip-container { display: flex; flex-wrap: wrap; gap: var(--space-xs); margin-top: var(--space-sm); }
+        
+        .chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px var(--space-sm); background-color: var(--light-100); border: 1px solid var(--light-300); border-radius: var(--radius-full); font-size: 0.75rem; color: var(--gray-400); transition: all 0.2s ease; }
+        
+        .chip:hover { background-color: var(--light-200); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+        
+        .chip i { font-size: 0.9rem; }
+        
+        .callout { position: relative; padding: 15px 20px 15px 60px; margin: 20px 0; background-color: rgba(240, 249, 255, 0.7); border-left: 4px solid var(--primary); border-radius: var(--radius-md); box-shadow: var(--shadow-md); }
+        
+        .callout::before { content: "\f0eb"; font-family: "Font Awesome 5 Free"; font-weight: 900; position: absolute; left: 20px; top: 50%; transform: translateY(-50%); font-size: 24px; color: var(--primary); }
+        
+        .callout.action { background-color: rgba(240, 255, 244, 0.7); border-left: 4px solid var(--success); }
+        
+        .callout.action::before { content: "\f04b"; color: var(--success); }
+        
+        .callout.warning { background-color: rgba(255, 248, 225, 0.7); border-left: 4px solid var(--warning); }
+        
+        .callout.warning::before { content: "\f071"; color: var(--warning); }
+        
+        .callout h4 { margin: 0 0 8px 0; font-size: 1.1rem; }
+        
+        .callout p { margin: 0; font-size: 0.95rem; }
+        
+        .effort-indicator { display: flex; align-items: center; margin-top: 10px; margin-bottom: 15px; }
+        
+        .effort-indicator-label { font-size: 0.75rem; color: var(--gray-300); margin-right: 10px; min-width: 100px; }
+        
+        .effort-dots { display: flex; gap: 5px; }
+        
+        .effort-dot { width: 12px; height: 12px; border-radius: 50%; background-color: var(--light-300); }
+        
+        .effort-dot.active { background-color: var(--primary); }
+        
+        .impact-bar { margin-top: 12px; margin-bottom: 5px; }
+        
+        .impact-label { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.75rem; }
+        
+        .impact-label-text { color: var(--gray-300); }
+        
+        .impact-percentage { color: var(--primary); font-weight: 600; }
+        
+        .impact-bar-container { height: 6px; background-color: var(--light-200); border-radius: 3px; overflow: hidden; }
+        
+        .impact-bar-fill { height: 100%; background-color: var(--primary); border-radius: 3px; }
+        
+        .highlight-number { font-size: 1.1rem; font-weight: 600; color: var(--primary-dark); }
+        
+        .action-item { background-color: var(--white); border-radius: var(--radius-lg); padding: var(--space-lg); margin-bottom: var(--space-lg); box-shadow: var(--shadow-sm); border: 1px solid var(--light-300); transition: all var(--transition-normal); position: relative; overflow: hidden; }
+        
+        .action-item::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; }
+        
+        .action-item.critical::before { background: linear-gradient(to bottom, var(--critical), var(--critical-dark)); }
+        .action-item.warning::before { background: linear-gradient(to bottom, var(--warning), var(--warning-dark)); }
+        .action-item.info::before { background: linear-gradient(to bottom, var(--info), var(--primary)); }
+        
+        .action-item:hover { transform: translateX(5px); box-shadow: var(--shadow-md); }
+        
+        .action-item h3 { font-size: 1.15rem; margin-bottom: var(--space-sm); color: var(--dark-200); display: flex; align-items: center; gap: var(--space-sm); }
+        
+        .action-item h3 i { font-size: 1rem; color: var(--white); background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); padding: var(--space-xs); border-radius: var(--radius-sm); }
+        
+        .action-item p { margin-bottom: var(--space-md); color: var(--gray-400); padding-left: calc(24px + var(--space-sm)); }
+        
+        .priority-tag { display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-left: 10px; }
+        
+        .priority-high { background-color: rgba(231, 76, 60, 0.15); color: #c0392b; }
+        .priority-medium { background-color: rgba(243, 156, 18, 0.15); color: #d35400; }
+        .priority-low { background-color: rgba(52, 152, 219, 0.15); color: #2980b9; }
+        
+        footer { background: linear-gradient(135deg, var(--dark-100) 0%, var(--dark-200) 100%); color: var(--white); padding: var(--space-xxl) 0; margin-top: var(--space-xxl); position: relative; overflow: hidden; }
+        
+        footer::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(to right, transparent, var(--primary), transparent); }
+        
+        footer .container { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-lg); }
+        
+        footer a { color: var(--primary-light); text-decoration: none; transition: color var(--transition-fast); }
+        
+        footer a:hover { color: var(--info); text-decoration: underline; }
+        
+        .count-animation { display: inline-block; }
+        
+        .scroll-top { position: fixed; bottom: 20px; right: 20px; width: 50px; height: 50px; border-radius: 50%; background: var(--white); display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: var(--shadow-lg); z-index: 1000; opacity: 0; visibility: hidden; transition: all var(--transition-normal); border: 1px solid var(--light-300); }
+        
+        .scroll-top.active { opacity: 1; visibility: visible; }
+        
+        .scroll-top:hover { transform: translateY(-5px); }
+        
+        .scroll-top i { color: var(--primary); font-size: 1.2rem; }
+        
+        .animate-fade-up { opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease, transform 0.8s ease; }
+        
+        .animated { opacity: 1; transform: translateY(0); }
+        
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 8px;
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .status-indicator.success {
+            background-color: rgba(46, 204, 113, 0.15);
+            color: var(--success);
+        }
+        
+        .status-indicator.warning {
+            background-color: rgba(243, 156, 18, 0.15);
+            color: var(--warning);
+        }
+        
+        .status-indicator.danger {
+            background-color: rgba(231, 76, 60, 0.15);
+            color: var(--danger);
+        }
+        
+        .status-indicator i {
+            font-size: 0.7rem;
+        }
+        
+        .category-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 6px;
+            border-radius: var(--radius-full);
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-right: 0;
+        }
+        
+        .badge-critical {
+            background-color: rgba(192, 57, 43, 0.15);
+            color: #c0392b;
+            border: 1px solid rgba(192, 57, 43, 0.3);
+        }
+        
+        .badge-high {
+            background-color: rgba(230, 126, 34, 0.15);
+            color: #e67e22;
+            border: 1px solid rgba(230, 126, 34, 0.3);
+        }
+        
+        .badge-medium {
+            background-color: rgba(241, 196, 15, 0.15);
+            color: #f1c40f;
+            border: 1px solid rgba(241, 196, 15, 0.3);
+        }
+        
+        .badge-info {
+            background-color: rgba(52, 152, 219, 0.15);
+            color: #3498db;
+            border: 1px solid rgba(52, 152, 219, 0.3);
+        }
+        
+        .category-badge:hover {
+            transform: scale(1.05);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        
+        .badge-critical:hover {
+            background-color: rgba(192, 57, 43, 0.25);
+        }
+        
+        .badge-high:hover {
+            background-color: rgba(230, 126, 34, 0.25);
+        }
+        
+        .badge-medium:hover {
+            background-color: rgba(241, 196, 15, 0.25);
+        }
+        
+        .badge-info:hover {
+            background-color: rgba(52, 152, 219, 0.25);
+        }
+        
+        .category-cell {
+            white-space: nowrap;
+            overflow: visible;
+            text-overflow: initial;
+            min-width: 120px;
+            max-width: none;
+        }
+        
+        .badge-container {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            align-items: flex-start;
+            width: 100%;
+        }
+        
+        .badge-container .category-badge {
+            width: fit-content;
+            white-space: nowrap;
+            min-width: 70px;
+            text-align: center;
+            justify-content: center;
+        }
+        
+        .category-cell .category-badge {
+            margin-bottom: 0;
+            display: inline-block;
+        }
+        
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 30%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(400%); }
+        }
+        
+        @media print {
+            .navbar, .scroll-top, .tabs { display: none !important; }
+            .section { page-break-inside: avoid; margin-bottom: 1rem; }
+            .chart-container { grid-template-columns: 1fr; }
+            .dashboard { grid-template-columns: repeat(2, 1fr); }
+            body { font-size: 12px; }
+            .hero { background: var(--white) !important; color: var(--dark-200) !important; }
+            .card { border: 1px solid var(--gray-200); }
+        }
+        
+        @keyframes slideInFromBottom {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .card:nth-child(1) { animation: slideInFromBottom 0.6s ease 0.1s both; }
+        .card:nth-child(2) { animation: slideInFromBottom 0.6s ease 0.2s both; }
+        .card:nth-child(3) { animation: slideInFromBottom 0.6s ease 0.3s both; }
+        .card:nth-child(4) { animation: slideInFromBottom 0.6s ease 0.4s both; }
+        .card:nth-child(5) { animation: slideInFromBottom 0.6s ease 0.5s both; }
+        .card:nth-child(6) { animation: slideInFromBottom 0.6s ease 0.6s both; }
+        
+        @media (max-width: 1024px) {
+            .dashboard { grid-template-columns: repeat(2, 1fr); }
+            .chart-container { grid-template-columns: 1fr; }
+            .hero-stats { flex-direction: column; gap: var(--space-md); }
+            .bar-chart { height: 300px; gap: var(--space-sm); }
+            .bar { width: 70px; min-width: 70px; }
+            .category-cell { min-width: 110px; }
+            .legend-main { gap: var(--space-md); }
+            .legend-item { font-size: 0.82rem; }
+        }
+        
+        @media (max-width: 900px) {
+            .legend-main { flex-direction: column; align-items: center; gap: var(--space-sm); }
+            .legend-item { justify-content: center; }
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard { grid-template-columns: 1fr; }
+            .chart-container { grid-template-columns: 1fr; }
+            footer .container { flex-direction: column; text-align: center; }
+            .navbar .container { flex-direction: column; gap: var(--space-md); }
+            .navbar-links { width: 100%; justify-content: center; flex-wrap: wrap; gap: var(--space-md); }
+            .hero h1 { font-size: 2rem; }
+            .hero-stat { min-width: 150px; }
+            .tabs { padding: var(--space-md) var(--space-sm) var(--space-xl) var(--space-sm); overflow-x: auto; overflow-y: visible; }
+            .bar-chart { height: 250px; flex-direction: column; align-items: center; gap: var(--space-lg); }
+            .bar { width: 60px; min-width: 60px; height: 80px !important; }
+            .bar-label { position: static; margin-top: 10px; }
+            .bar-value { position: static; margin-bottom: 5px; }
+            .category-cell { min-width: 100px; }
+            .legend-main { flex-direction: column; align-items: center; gap: var(--space-sm); }
+            .legend-item { font-size: 0.8rem; justify-content: center; }
+        }
+        
+        .card:focus-within {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+        
+        .tab:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+        
+        .tab.active:focus {
+            outline: 2px solid var(--white);
+            outline-offset: 2px;
+        }
+        
+        .progress-container.dedup-aware {
+            position: relative;
+        }
+        
+        .progress-container.dedup-aware::after {
+            content: "⚡";
+            position: absolute;
+            right: -25px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1rem;
+            color: var(--info);
+            cursor: help;
+        }
+        
+        .dedup-explanation {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.1) 0%, rgba(155, 89, 182, 0.1) 100%);
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            margin: var(--space-lg) 0;
+            position: relative;
+        }
+        
+        .dedup-explanation::before {
+            content: "⚡";
+            font-family: inherit;
+            font-weight: 900;
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            font-size: 24px;
+            color: var(--info);
+        }
+        
+        .dedup-explanation h4 {
+            margin: 0 0 15px 40px;
+            color: var(--info);
+            font-size: 1.1rem;
+        }
+        
+        .dedup-explanation p {
+            margin: 0 0 10px 40px;
+            font-size: 0.95rem;
+            color: var(--gray-400);
+        }
+        
+        .dedup-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-md);
+            margin: 15px 0 0 40px;
+        }
+        
+        .dedup-value {
+            background: var(--white);
+            padding: 12px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--light-300);
+        }
+        
+        .dedup-value-label {
+            font-size: 0.8rem;
+            color: var(--gray-300);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        
+        .dedup-value-amount {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+        
+        .dedup-value.logical {
+            border-left: 4px solid var(--warning);
+        }
+        
+        .dedup-value.physical {
+            border-left: 4px solid var(--success);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="#" class="navbar-brand">
+                <i class="fas fa-shield-alt"></i>
+                Sanitização do File Server
+            </a>
+            <div class="navbar-links">
+                <a href="#overview">Visão Geral</a>
+                <a href="#details">Detalhes</a>
+                <a href="#recommendations">Recomendações</a>
+                <a href="#actions">Ações</a>
+            </div>
+        </div>
+    </nav>
+    
+    <section class="hero">
+        <div class="container">
+            <h1>Relatório de Sanitização do File Server</h1>
+            <p>Análise completa 100% read-only com tratamento robusto de erros e recomendações para otimização de armazenamento para: \\SRV-FILES01\Dados</p>
+            
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <div class="hero-stat-value count-animation" data-count="15.50" data-suffix=" TB">15.50 TB</div>
+                    <div class="hero-stat-label">Espaço Total</div>
+                </div>
+                
+                <div class="hero-stat">
+                    <div class="hero-stat-value count-animation" data-count="12.80" data-suffix=" TB">12.80 TB</div>
+                    <div class="hero-stat-label">Espaço Usado</div>
+                </div>
+                
+                <div class="hero-stat highlight-value">
+                    <div class="hero-stat-value count-animation" data-count="3.45" data-suffix=" TB">3.45 TB</div>
+                    <div class="hero-stat-label">Potencial de Recuperação <span class="trend-indicator trend-up">↑</span></div>
+                </div>
+                
+                <div class="hero-stat">
+                    <div class="hero-stat-value count-animation" data-count="26.95" data-suffix="%">26.95%</div>
+                    <div class="hero-stat-label">Espaço Recuperável</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <div class="container" id="overview">
+        <div class="dashboard animate-fade-up">
+            <div class="card">
+                <h3>Informações do Disco C</h3>
+                <div class="card-data">
+                    <i class="fas fa-hdd"></i>
+                    12,800.00 GB
+                </div>
+                <div class="card-subtext">Espaço usado de 15,500.00 GB total (82.58%)</div>
+            </div>
+            
+            <div class="card">
+                <h3>Espaço Livre</h3>
+                <div class="card-data">
+                    <i class="fas fa-check-circle"></i>
+                    2,700.00 GB
+                </div>
+                <div class="card-subtext">17.42% do espaço total disponível</div>
+            </div>
+            
+            <div class="card">
+                <h3>Arquivos Duplicados</h3>
+                <div class="card-data">
+                    <i class="fas fa-copy"></i>
+                    1,280.50 GB
+                </div>
+                <div class="card-subtext">847 grupos de duplicados</div>
+            </div>
+            
+            <div class="card">
+                <h3>Grandes OU Antigos</h3>
+                <div class="card-data">
+                    <i class="fas fa-archive"></i>
+                    1,523 arquivos
+                </div>
+                <div class="card-subtext">Arquivos grandes (500 MB) OU antigos (90 dias)</div>
+            </div>
+            
+            <div class="card dedup-card">
+                <h3>Windows Deduplication</h3>
+                <div class="card-data">
+                    <i class="fas fa-compress-alt"></i>
+                    2.35x
+                </div>
+                <div class="card-subtext">Taxa de compressão ativa <span class="status-indicator success"><i class="fas fa-check"></i>Ativo</span></div>
+                <div class="dedup-details">
+                    <span><strong>Espaço lógico:</strong> 18,450.00 GB</span>
+                    <span><strong>Espaço físico:</strong> 12,800.00 GB</span>
+                    <span><strong>Economia:</strong> 57.4% <i class="fas fa-chart-pie" style="color: #2ecc71; margin-left: 5px; font-size: 0.9em;" title="Representada em verde no gráfico"></i></span>
+                </div>
+            </div>
+            
+            <div class="card error-card">
+                <h3>Erros de Análise</h3>
+                <div class="card-data">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    156
+                </div>
+                <div class="card-subtext">Total de erros encontrados durante a análise</div>
+                <div class="error-details">
+                    <span><strong>Sem permissão:</strong> 89</span>
+                    <span><strong>Caminhos longos:</strong> 43</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section animate-fade-up">
+            <div class="section-header">
+                <h2><i class="fas fa-chart-pie"></i> Potencial de Recuperação</h2>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-label">
+                    <span>Utilização do Disco</span>
+                    <strong class="text-warning">12,800.00 GB (82.58%)</strong>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill full-disk-fill" style="width: 82.6%;"></div>
+                </div>
+            </div>
+            
+            <div class="progress-container dedup-aware">
+                <div class="progress-label">
+                    <span>Arquivos Duplicados</span>
+                    <strong class="text-warning">1,280.50 GB</strong>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill dup-fill" style="width: 10.0%;"></div>
+                </div>
+            </div>
+            
+            <div class="progress-container dedup-aware">
+                <div class="progress-label">
+                    <span>Grandes OU Antigos</span>
+                    <strong class="text-warning">1,890.75 GB</strong>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill grandes-antigos-fill" style="width: 14.8%;"></div>
+                </div>
+            </div>
+            
+            <div class="progress-container dedup-aware">
+                <div class="progress-label">
+                    <span>Total Recuperável</span>
+                    <strong class="text-success">3.45 TB (26.95%)</strong>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill total-fill" style="width: 26.9%;"></div>
+                </div>
+            </div>
+            
+            <div class="dedup-explanation">
+                <h4>Windows Deduplication Detectada</h4>
+                <p><strong>Importante:</strong> Os valores mostrados foram ajustados considerando que a deduplicação está ativa (Taxa: 2.35x).</p>
+                <p>Isso significa que quando você remove arquivos, o espaço físico liberado no disco será menor que o tamanho lógico dos arquivos.</p>
+                <p><strong>Exemplo:</strong> Se você remove 100GB de duplicados "lógicos", apenas 43GB serão liberados fisicamente no disco.</p>
+                <p><strong><i class="fas fa-chart-pie" style="color: #2ecc71;"></i> Gráfico:</strong> A seção verde no gráfico mostra a economia adicional proporcionada pela deduplicação ativa.</p>
+                
+                <div class="dedup-comparison">
+                    <div class="dedup-value logical">
+                        <div class="dedup-value-label">Espaço Lógico</div>
+                        <div class="dedup-value-amount">4.92 TB</div>
+                        <small>Tamanho "aparente" dos arquivos</small>
+                    </div>
+                    <div class="dedup-value physical">
+                        <div class="dedup-value-label">Espaço Físico</div>
+                        <div class="dedup-value-amount">3.45 TB</div>
+                        <small>Espaço real liberado no disco</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section animate-fade-up" id="details">
+            <div class="section-header">
+                <h2><i class="fas fa-info-circle"></i> Informações Detalhadas</h2>
+            </div>
+            
+            <div class="tabs">
+                <button class="tab active" onclick="openTab(event, 'overview-tab')">Visão Geral</button>
+                <button class="tab" onclick="openTab(event, 'types-tab')">Tipos de Arquivo</button>
+                <button class="tab" onclick="openTab(event, 'duplicates-tab')">Duplicados</button>
+                <button class="tab" onclick="openTab(event, 'large-old-tab')">Grandes OU Antigos</button>
+                <button class="tab" onclick="openTab(event, 'errors-tab')">Erros v2.3</button>
+            </div>
+            
+            <div id="overview-tab" class="tab-content active">
+                <h3 class="mb-2">Resumo da Análise</h3>
+                <p class="mb-1"><strong>Espaço analisado:</strong> 12,800.00 GB</p>
+                <p class="mb-1"><strong>Espaço total disponível:</strong> 15,500.00 GB (17.4% livre)</p>
+                <p class="mb-1"><strong>Potencial de recuperação:</strong> 3.45 TB (26.9% do espaço usado)</p>
+                <p class="mb-3"><strong>Windows Deduplication:</strong> Ativa (Taxa: 2.35x) - Valores ajustados para espaço físico real</p>
+                
+                <div class="chart-container">
+                    <div class="chart">
+                        <h3>Top 5 Tipos de Arquivo</h3>
+                        <div class="bar-chart">
+                            <div class="bar bar-type-1" style="height: 280px; --index: 1;">
+                                <div class="bar-value">2.8 TB</div>
+                                <div class="bar-label">.pst</div>
+                            </div>
+                            <div class="bar bar-type-2" style="height: 210px; --index: 2;">
+                                <div class="bar-value">1.9 TB</div>
+                                <div class="bar-label">.mp4</div>
+                            </div>
+                            <div class="bar bar-type-3" style="height: 168px; --index: 3;">
+                                <div class="bar-value">1.4 TB</div>
+                                <div class="bar-label">.zip</div>
+                            </div>
+                            <div class="bar bar-type-4" style="height: 126px; --index: 4;">
+                                <div class="bar-value">950.0 GB</div>
+                                <div class="bar-label">.pdf</div>
+                            </div>
+                            <div class="bar bar-type-5" style="height: 84px; --index: 5;">
+                                <div class="bar-value">780.5 GB</div>
+                                <div class="bar-label">.docx</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chart dedup-active">
+                        <h3>Recuperação + Economia Deduplicação <i class='fas fa-magic' style='color: #2ecc71; font-size: 0.8em;'></i></h3>
+                        <div class="donut-chart-container">
+                            <div class="donut-chart"></div>
+                            <div class="donut-hole">
+                                <span>4.92</span>
+                                <span>TB Total</span>
+                            </div>
+                        </div>
+                        <div class="legend">
+                            <div class="legend-main">
+                                <div class="legend-item">
+                                    <div class="legend-color"></div>
+                                    <span>Duplicados: 1.28 TB (32%)</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color"></div>
+                                    <span>Grandes+Antigos: 1.89 TB (36%)</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color"></div>
+                                    <span>Deduplicação: 1.47 TB (32%)</span>
+                                </div>
+                            </div>
+                            <div class="legend-note">
+                                <i class="fas fa-magic"></i>
+                                A seção verde mostra a economia proporcionada pela deduplicação ativa
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="types-tab" class="tab-content">
+                <h3 class="mb-2">Distribuição por Tipo de Arquivo</h3>
+                <p class="mb-3">Análise dos tipos de arquivo que mais ocupam espaço no disco</p>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Extensão</th>
+                            <th>Tamanho</th>
+                            <th>Quantidade</th>
+                            <th>% do Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>.pst</td>
+                            <td>2.8 TB</td>
+                            <td>1,247</td>
+                            <td>21.88%</td>
+                        </tr>
+                        <tr>
+                            <td>.mp4</td>
+                            <td>1.9 TB</td>
+                            <td>8,934</td>
+                            <td>14.84%</td>
+                        </tr>
+                        <tr>
+                            <td>.zip</td>
+                            <td>1.4 TB</td>
+                            <td>15,672</td>
+                            <td>10.94%</td>
+                        </tr>
+                        <tr>
+                            <td>.pdf</td>
+                            <td>950.0 GB</td>
+                            <td>89,234</td>
+                            <td>7.42%</td>
+                        </tr>
+                        <tr>
+                            <td>.docx</td>
+                            <td>780.5 GB</td>
+                            <td>156,789</td>
+                            <td>6.09%</td>
+                        </tr>
+                        <tr>
+                            <td>.xlsx</td>
+                            <td>645.2 GB</td>
+                            <td>78,912</td>
+                            <td>5.04%</td>
+                        </tr>
+                        <tr>
+                            <td>.log</td>
+                            <td>512.8 GB</td>
+                            <td>234,567</td>
+                            <td>4.01%</td>
+                        </tr>
+                        <tr>
+                            <td>.bak</td>
+                            <td>456.9 GB</td>
+                            <td>45,678</td>
+                            <td>3.57%</td>
+                        </tr>
+                        <tr>
+                            <td>.tmp</td>
+                            <td>389.4 GB</td>
+                            <td>567,890</td>
+                            <td>3.04%</td>
+                        </tr>
+                        <tr>
+                            <td>.iso</td>
+                            <td>234.7 GB</td>
+                            <td>123</td>
+                            <td>1.83%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div id="duplicates-tab" class="tab-content">
+                <h3 class="mb-2">Arquivos Duplicados</h3>
+                <p class="mb-3">Foram encontrados 847 grupos de arquivos duplicados, ocupando 1,280.50 GB de espaço recuperável.</p>
+                
+                <div class="collapsible-card">
+                    <button class="collapsible">
+                        Top 5 Grupos de Duplicados
+                        <span class="priority-tag priority-high">Prioridade Alta</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="content">
+                        <div class="content-inner">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Grupo</th>
+                                        <th>Arquivos</th>
+                                        <th>Tamanho Total</th>
+                                        <th>Recuperável</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>15</td>
+                                        <td>45.8 GB</td>
+                                        <td>42.7 GB</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>8</td>
+                                        <td>28.4 GB</td>
+                                        <td>24.9 GB</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>12</td>
+                                        <td>18.9 GB</td>
+                                        <td>17.3 GB</td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td>6</td>
+                                        <td>15.2 GB</td>
+                                        <td>12.7 GB</td>
+                                    </tr>
+                                    <tr>
+                                        <td>5</td>
+                                        <td>9</td>
+                                        <td>12.8 GB</td>
+                                        <td>11.4 GB</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p class="mt-2"><strong>Ação recomendada:</strong> Revisão e remoção dos arquivos duplicados após verificação de segurança.</p>
+                            <p><strong>Relatório detalhado:</strong> Consulte o arquivo CSV completo para ver todos os grupos de duplicados.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="large-old-tab" class="tab-content">
+                <h3 class="mb-2">Grandes OU Antigos</h3>
+                <p class="mb-3">Foram encontrados 1,523 arquivos grandes (500 MB) OU antigos (90 dias), ocupando 1,890.75 GB de espaço.</p>
+                
+                <div class="collapsible-card">
+                    <button class="collapsible">
+                        Top 5 Arquivos Grandes OU Antigos
+                        <span class="priority-tag priority-high">Prioridade Alta</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="content">
+                        <div class="content-inner">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Arquivo</th>
+                                        <th>Categoria</th>
+                                        <th>Tamanho</th>
+                                        <th>Idade (dias)</th>
+                                        <th>Última Modificação</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>VM_Backup_2023.vhdx</td>
+                                        <td class="category-cell">
+                                            <div class="badge-container">
+                                                <span class="category-badge badge-critical">Grande + Antigo</span>
+                                            </div>
+                                        </td>
+                                        <td>847.2 GB</td>
+                                        <td>1.8 anos</td>
+                                        <td>2023-04-15 14:30:25</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Database_Full_Backup.bak</td>
+                                        <td class="category-cell">
+                                            <div class="badge-container">
+                                                <span class="category-badge badge-high">Grande</span>
+                                            </div>
+                                        </td>
+                                        <td>234.7 GB</td>
+                                        <td>45 dias</td>
+                                        <td>2025-05-10 02:15:44</td>
+                                    </tr>
+                                    <tr>
+                                        <td>VideoProject_4K.mp4</td>
+                                        <td class="category-cell">
+                                            <div class="badge-container">
+                                                <span class="category-badge badge-critical">Grande + Antigo</span>
+                                            </div>
+                                        </td>
+                                        <td>156.8 GB</td>
+                                        <td>278 dias</td>
+                                        <td>2024-10-19 16:45:12</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Archive_2022_Complete.zip</td>
+                                        <td class="category-cell">
+                                            <div class="badge-container">
+                                                <span class="category-badge badge-medium">Antigo</span>
+                                            </div>
+                                        </td>
+                                        <td>89.3 GB</td>
+                                        <td>842 dias</td>
+                                        <td>2022-12-08 09:20:33</td>
+                                    </tr>
+                                    <tr>
+                                        <td>ISO_Collection_Software.iso</td>
+                                        <td class="category-cell">
+                                            <div class="badge-container">
+                                                <span class="category-badge badge-high">Grande</span>
+                                            </div>
+                                        </td>
+                                        <td>67.4 GB</td>
+                                        <td>15 dias</td>
+                                        <td>2025-06-09 11:05:17</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p class="mt-2"><strong>Critério:</strong> Arquivos 500 MB ou 90 dias (ordenados por impacto)</p>
+                            <p class="mt-2"><strong>Ação recomendada:</strong> Considerar a migração desses arquivos para armazenamento externo, cloud ou arquivá-los se não forem acessados frequentemente.</p>
+                            <p><strong>Relatório detalhado:</strong> Consulte o arquivo CSV completo para ver todos os arquivos grandes OU antigos.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="errors-tab" class="tab-content">
+                <h3 class="mb-2">Relatório de Erros v2.3</h3>
+                <p class="mb-3">Durante a análise foram encontrados <strong>156</strong> erros que impediram o acesso a alguns arquivos e pastas.</p>
+                
+                <div class="callout warning">
+                    <h4>Nova Funcionalidade v2.3</h4>
+                    <p>Esta versão inclui tratamento robusto de erros de permissão e caminhos muito longos, garantindo que a análise continue mesmo com problemas de acesso.</p>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tipo de Erro</th>
+                            <th>Quantidade</th>
+                            <th>Descrição</th>
+                            <th>Arquivo CSV</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Sem Permissão</td>
+                            <td>89</td>
+                            <td>Arquivos e pastas sem permissão de acesso</td>
+                            <td>ErrosPermissao.csv</td>
+                        </tr>
+                        <tr>
+                            <td>Caminhos Longos</td>
+                            <td>43</td>
+                            <td>Caminhos que excedem 240 caracteres</td>
+                            <td>CaminhosMuitoLongos.csv</td>
+                        </tr>
+                        <tr>
+                            <td>Arquivos Não Encontrados</td>
+                            <td>18</td>
+                            <td>Arquivos que não puderam ser acessados</td>
+                            <td>OutrosErros.csv</td>
+                        </tr>
+                        <tr>
+                            <td>Outros Erros</td>
+                            <td>6</td>
+                            <td>Demais problemas encontrados</td>
+                            <td>OutrosErros.csv</td>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td><strong>Total</strong></td>
+                            <td><strong>156</strong></td>
+                            <td>Todos os erros registrados</td>
+                            <td>ResumoErros.txt</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h4 class="mt-3">Recomendações para Resolução:</h4>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li><strong>Erros de Permissão:</strong> Verificar configurações de segurança e ACLs</li>
+                    <li><strong>Caminhos Longos:</strong> Renomear arquivos/pastas para encurtar caminhos</li>
+                    <li><strong>Ferramentas:</strong> Considerar robocopy ou PowerShell com parâmetro -LiteralPath para caminhos longos</li>
+                    <li><strong>Execução como Administrador:</strong> Executar o script com privilégios elevados para reduzir erros de permissão</li>
+                </ul>
+                
+                <div class="callout action mt-3">
+                    <h4>Próximos Passos</h4>
+                    <p>Consulte os arquivos CSV gerados para obter uma lista detalhada dos caminhos problemáticos. Use essas informações para solicitar permissões ou ajustar a estrutura de pastas conforme necessário.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section animate-fade-up" id="recommendations">
+            <div class="section-header">
+                <h2><i class="fas fa-lightbulb"></i> Recomendações de Limpeza</h2>
+            </div>
+            
+            <div class="collapsible-card">
+                <button class="collapsible">
+                    1. Remoção de Arquivos Duplicados
+                    <span class="priority-tag priority-high">Prioridade Alta</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="content">
+                    <div class="content-inner">
+                        <p><strong>Espaço total recuperável:</strong> <span class="highlight-number">1,280.50 GB</span></p>
+                        <p><strong>Grupos de arquivos:</strong> 847</p>
+                        
+                        <div class="impact-bar">
+                            <div class="impact-label">
+                                <span class="impact-label-text">Contribuição para recuperação total</span>
+                                <span class="impact-percentage">37.1%</span>
+                            </div>
+                            <div class="impact-bar-container">
+                                <div class="impact-bar-fill" style="width: 37.1%;"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="effort-indicator">
+                            <span class="effort-indicator-label">Nível de esforço:</span>
+                            <div class="effort-dots">
+                                <div class="effort-dot active"></div>
+                                <div class="effort-dot active"></div>
+                                <div class="effort-dot"></div>
+                            </div>
+                            <span style="font-size: 0.75rem; margin-left: 8px; color: var(--gray-300);">Médio</span>
+                        </div>
+                        
+                        <div class="callout action" style="margin: 15px 0 10px 0;">
+                            <h4>Potencial de Economia Rápida</h4>
+                            <p>Esta ação oferece um ganho imediato e pode ser implementada com impacto mínimo nas operações diárias.</p>
+                        </div>
+                        
+                        <p class="mt-2"><strong>Ação recomendada:</strong> Para cada grupo de arquivos duplicados, manter apenas uma cópia (preferencialmente a original) e remover as demais após confirmação.</p>
+                        <p><strong>Relatório detalhado:</strong> <a href="#" target="_blank">ArquivosDuplicados.csv</a></p>
+                        
+                        <div class="chip-container">
+                            <div class="chip"><i class="fas fa-file-alt"></i> Relatório</div>
+                            <div class="chip"><i class="fas fa-trash-alt"></i> Remoção</div>
+                            <div class="chip"><i class="fas fa-check-circle"></i> Validação</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="collapsible-card">
+                <button class="collapsible">
+                    2. Arquivos Temporários e Logs
+                    <span class="priority-tag priority-medium">Prioridade Média</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="content">
+                    <div class="content-inner">
+                        <p><strong>Potencial de recuperação:</strong> <span class="highlight-number">274.25 GB</span></p>
+                        <p><strong>Tipos de arquivos:</strong> .tmp, .temp, .log, .bak, etc.</p>
+                        
+                        <div class="impact-bar">
+                            <div class="impact-label">
+                                <span class="impact-label-text">Contribuição para recuperação total</span>
+                                <span class="impact-percentage">7.9%</span>
+                            </div>
+                            <div class="impact-bar-container">
+                                <div class="impact-bar-fill" style="width: 7.9%;"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="effort-indicator">
+                            <span class="effort-indicator-label">Nível de esforço:</span>
+                            <div class="effort-dots">
+                                <div class="effort-dot active"></div>
+                                <div class="effort-dot"></div>
+                                <div class="effort-dot"></div>
+                            </div>
+                            <span style="font-size: 0.75rem; margin-left: 8px; color: var(--gray-300);">Baixo</span>
+                        </div>
+                        
+                        <div class="callout action" style="margin: 15px 0 10px 0;">
+                            <h4>Limpeza de Manutenção</h4>
+                            <p>Esta ação contribui para a saúde do sistema e pode ser automatizada para execução periódica.</p>
+                        </div>
+                        
+                        <p class="mt-2"><strong>Ação recomendada:</strong> Remover arquivos temporários e logs antigos que não são mais necessários.</p>
+                        <p><strong>Relatório detalhado:</strong> <a href="#" target="_blank">ArquivosTemporarios.csv</a></p>
+                        
+                        <div class="chip-container">
+                            <div class="chip"><i class="fas fa-file-alt"></i> Relatório</div>
+                            <div class="chip"><i class="fas fa-broom"></i> Limpeza</div>
+                            <div class="chip"><i class="fas fa-calendar-alt"></i> Programação</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="collapsible-card">
+                <button class="collapsible">
+                    3. Arquivar ou Migrar Grandes OU Antigos (Por Prioridade)
+                    <span class="priority-tag priority-high">Prioridade Alta</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="content">
+                    <div class="content-inner">
+                        <p><strong>Potencial de recuperação:</strong> <span class="highlight-number">1,890.75 GB</span></p>
+                        <p><strong>Quantidade:</strong> 1,523 arquivos grandes (500 MB) OU antigos (90 dias)</p>
+                        
+                        <div class="impact-bar">
+                            <div class="impact-label">
+                                <span class="impact-label-text">Contribuição para recuperação total</span>
+                                <span class="impact-percentage">55.0%</span>
+                            </div>
+                            <div class="impact-bar-container">
+                                <div class="impact-bar-fill" style="width: 55.0%;"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="effort-indicator">
+                            <span class="effort-indicator-label">Nível de esforço:</span>
+                            <div class="effort-dots">
+                                <div class="effort-dot active"></div>
+                                <div class="effort-dot active"></div>
+                                <div class="effort-dot active"></div>
+                            </div>
+                            <span style="font-size: 0.75rem; margin-left: 8px; color: var(--gray-300);">Alto</span>
+                        </div>
+                        
+                        <div class="callout action" style="margin: 15px 0 10px 0;">
+                            <h4>Maior Potencial de Economia</h4>
+                            <p>Esta ação representa uma parte significativa do potencial total de recuperação de espaço no servidor.</p>
+                        </div>
+                        
+                        <p class="mt-2"><strong>Ação recomendada:</strong> Revisar arquivos grandes OU antigos. Focar primeiro em <span class="category-badge badge-critical">GRANDE + ANTIGO</span>, depois <span class="category-badge badge-high">GRANDE</span> e por último <span class="category-badge badge-medium">ANTIGO</span>.</p>
+                        <p><strong>Relatório detalhado:</strong> <a href="#" target="_blank">GrandesAntigos.csv</a></p>
+                        
+                        <div class="chip-container">
+                            <div class="chip"><i class="fas fa-file-alt"></i> Relatório</div>
+                            <div class="chip"><i class="fas fa-external-link-alt"></i> Migração</div>
+                            <div class="chip"><i class="fas fa-archive"></i> Arquivamento</div>
+                            <div class="chip"><i class="fas fa-sort-amount-down"></i> Ordenado</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section animate-fade-up" id="actions">
+            <div class="section-header">
+                <h2><i class="fas fa-play-circle"></i> Plano de Ação</h2>
+            </div>
+            
+            <div class="action-item critical">
+                <h3><i class="fas fa-copy"></i> 1. Remover Arquivos Duplicados</h3>
+                <p>Revisar o arquivo "ArquivosDuplicados.csv" para identificar e remover arquivos duplicados seguros. Manter apenas uma cópia de cada grupo de arquivos, preferencialmente a original.</p>
+                
+                <div class="impact-bar mt-2">
+                    <div class="impact-label">
+                        <span class="impact-label-text">Impacto na economia total</span>
+                        <span class="impact-percentage">37.1%</span>
+                    </div>
+                    <div class="impact-bar-container">
+                        <div class="impact-bar-fill" style="width: 37.1%;"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="action-item warning">
+                <h3><i class="fas fa-broom"></i> 2. Limpar Arquivos Temporários</h3>
+                <p>Limpar arquivos temporários (.tmp, .log, .bak) que não são mais necessários. Pode-se usar o arquivo "ArquivosTemporarios.csv" para identificação específica.</p>
+                
+                <div class="impact-bar mt-2">
+                    <div class="impact-label">
+                        <span class="impact-label-text">Impacto na economia total</span>
+                        <span class="impact-percentage">7.9%</span>
+                    </div>
+                    <div class="impact-bar-container">
+                        <div class="impact-bar-fill" style="width: 7.9%;"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="action-item info">
+                <h3><i class="fas fa-archive"></i> 3. Arquivar ou Migrar Grandes OU Antigos (Por Prioridade)</h3>
+                <p>Revisar os arquivos grandes OU antigos identificados no relatório. Focar primeiro em <span class="category-badge badge-critical">GRANDE + ANTIGO</span>, depois <span class="category-badge badge-high">GRANDE</span> e por último <span class="category-badge badge-medium">ANTIGO</span>.</p>
+                
+                <div class="impact-bar mt-2">
+                    <div class="impact-label">
+                        <span class="impact-label-text">Impacto na economia total</span>
+                        <span class="impact-percentage">55.0%</span>
+                    </div>
+                    <div class="impact-bar-container">
+                        <div class="impact-bar-fill" style="width: 55.0%;"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="action-item info">
+                <h3><i class="fas fa-cogs"></i> 4. Implementar Política de Armazenamento</h3>
+                <p>Estabelecer políticas de uso de espaço em disco, incluindo limites para tipos de arquivos, cotas de usuário e limpeza periódica de arquivos temporários e antigos.</p>
+                
+                <div class="effort-indicator">
+                    <span class="effort-indicator-label">Nível de esforço:</span>
+                    <div class="effort-dots">
+                        <div class="effort-dot active"></div>
+                        <div class="effort-dot active"></div>
+                        <div class="effort-dot active"></div>
+                    </div>
+                    <span style="font-size: 0.75rem; margin-left: 8px; color: var(--gray-300);">Alto</span>
+                </div>
+            </div>
+            
+            <div class="action-item warning">
+                <h3><i class="fas fa-shield-alt"></i> 5. Resolver Problemas de Acesso v2.3</h3>
+                <p>Verificar e corrigir os 156 erros de acesso encontrados durante a análise. Consulte os arquivos CSV gerados para obter listas detalhadas de caminhos problemáticos.</p>
+                
+                <div class="effort-indicator">
+                    <span class="effort-indicator-label">Nível de esforço:</span>
+                    <div class="effort-dots">
+                        <div class="effort-dot active"></div>
+                        <div class="effort-dot active"></div>
+                        <div class="effort-dot"></div>
+                    </div>
+                    <span style="font-size: 0.75rem; margin-left: 8px; color: var(--gray-300);">Médio</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <div>
+                <p>&copy; 2025 Relatório de Sanitização do File Server - Gerado em 24/06/2025 14:32</p>
+            </div>
+            <div>
+                <p>Desenvolvido por Mathews Buzetti - Versão 2.3</p>
+            </div>
+        </div>
+    </footer>
+    
+    <div class="scroll-top" onclick="scrollToTop()">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+    
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].className = tabcontent[i].className.replace(" active", "");
+            }
+            
+            tablinks = document.getElementsByClassName("tab");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            
+            document.getElementById(tabName).className += " active";
+            evt.currentTarget.className += " active";
+        }
+        
+        var coll = document.getElementsByClassName("collapsible");
+        
+        for (var i = 0; i < coll.length; i++) {
+            coll[i].addEventListener("click", function() {
+                this.classList.toggle("active");
+                var content = this.nextElementSibling;
+                
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null;
+                } else {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                }
+            });
+        }
+        
+        window.onscroll = function() {scrollFunction()};
+        
+        function scrollFunction() {
+            var scrollBtn = document.querySelector(".scroll-top");
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                scrollBtn.classList.add("active");
+            } else {
+                scrollBtn.classList.remove("active");
+            }
+        }
+        
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+        
+        document.addEventListener("DOMContentLoaded", function() {
+            var animateElements = document.querySelectorAll(".animate-fade-up");
+            
+            function checkIfInView() {
+                var windowHeight = window.innerHeight;
+                var windowTopPosition = window.scrollY;
+                var windowBottomPosition = windowTopPosition + windowHeight;
+                
+                animateElements.forEach(function(element) {
+                    var elementHeight = element.offsetHeight;
+                    var elementTopPosition = element.offsetTop;
+                    var elementBottomPosition = elementTopPosition + elementHeight;
+                    
+                    if (elementBottomPosition >= windowTopPosition && elementTopPosition <= windowBottomPosition) {
+                        element.classList.add("animated");
+                    }
+                });
+            }
+            
+            window.addEventListener("scroll", checkIfInView);
+            window.addEventListener("resize", checkIfInView);
+            
+            checkIfInView();
+            initCountAnimations();
+        });
+        
+        function initCountAnimations() {
+            const countElements = document.querySelectorAll('.count-animation');
+            
+            countElements.forEach(el => {
+                const targetValue = parseFloat(el.getAttribute('data-count'));
+                const suffix = el.getAttribute('data-suffix') || '';
+                const duration = 2000;
+                const framesPerSecond = 60;
+                const totalFrames = duration / 1000 * framesPerSecond;
+                const increment = targetValue / totalFrames;
+                
+                let currentValue = 0;
+                let currentFrame = 0;
+                
+                const counter = setInterval(() => {
+                    currentFrame++;
+                    currentValue += increment;
+                    
+                    if (currentValue >= targetValue) {
+                        el.textContent = targetValue.toLocaleString('en-US', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        }) + suffix;
+                        clearInterval(counter);
+                    } else {
+                        el.textContent = currentValue.toLocaleString('en-US', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        }) + suffix;
+                    }
+                }, 1000 / framesPerSecond);
+            });
+        }
+
+        // Auto expand first collapsible for demo
+        document.addEventListener("DOMContentLoaded", function() {
+            setTimeout(function() {
+                const firstCollapsible = document.querySelector('.collapsible');
+                if (firstCollapsible) {
+                    firstCollapsible.click();
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
